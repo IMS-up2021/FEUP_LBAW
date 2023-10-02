@@ -18,6 +18,7 @@ BrainShare seeks to use the internet’s power to connect people towards develop
 * Inês Soares, up202108852@fe.up.pt
 * João Padrão, up202108766@fe.up.pt
 * Samuel Maciel, up202108697@fe.up.pt
+* João Ventura, up202302063@fe.up.pt
 
 ***
 GROUP6, 21/09/2023
