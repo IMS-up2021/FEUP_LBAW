@@ -54,9 +54,15 @@ CREATE TABLE Admin (
     FOREIGN KEY (admin_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE Tag (
+    id SERIAL PRIMARY KEY,
+    tagName VARCHAR NOT NULL UNIQUE
+);
+
 CREATE TABLE Publication (
     id SERIAL PRIMARY KEY,
     owner_id INTEGER REFERENCES Owner(owner_id) ON DELETE CASCADE,
+    tag_id INTEGER REFERENCES Tag(id) ON DELETE CASCADE,
     content TEXT NOT NULL,
     date TODAY
 );
@@ -104,16 +110,11 @@ CREATE TABLE AnswerNotif(
     answer_id INTEGER NOT NULL REFERENCES Answer(answer_id) ON DELETE CASCADE
 );
 
-CREATE TABLE Tag (
-    id SERIAL PRIMARY KEY,
-    tagName VARCHAR NOT NULL UNIQUE
-);
-
 CREATE TABLE TagNotif(
     notification_id INTEGER PRIMARY KEY,
     FOREIGN KEY (notification_id) REFERENCES Notification(id) ON DELETE CASCADE,
     tag_id INTEGER NOT NULL REFERENCES Tag(id) ON DELETE CASCADE
-);
+);  
 
 CREATE TABLE Subscription(
     user_id INTEGER NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
@@ -136,3 +137,99 @@ CREATE TABLE Reviews(
     positive BOOLEAN,
     date TODAY 
 );
+
+
+
+-----------------------------------------
+-- INDEXES
+-----------------------------------------
+
+CREATE INDEX user_notification ON Notification USING btree (user_id);
+
+CREATE INDEX score_index ON QuestionOrAnswer USING btree (score);
+
+CREATE INDEX date_index ON Publication USING btree (date);
+
+-- FTS INDEXES
+
+-- Add a column to store computed ts_vectors.
+ALTER TABLE Question
+ADD COLUMN tsvectors TSVECTOR;
+
+-- Create a function to automatically update ts_vectors.
+CREATE OR REPLACE FUNCTION question_search_update() RETURNS TRIGGER AS $$
+BEGIN
+  IF TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND NEW.title <> OLD.title) THEN
+    NEW.tsvectors = to_tsvector('english', NEW.title);
+  END IF;
+  RETURN NEW;
+END
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger before insert or update on Question.
+CREATE TRIGGER question_search_update
+BEFORE INSERT OR UPDATE ON Question
+FOR EACH ROW
+EXECUTE PROCEDURE question_search_update();
+
+-- Finally, create a GIN index for ts_vectors.
+CREATE INDEX question_title_idx ON Question USING GIN (tsvectors);
+
+
+
+-----------------------------------------
+-- TRIGGERS 
+-----------------------------------------
+-- TRIGGER01 
+-- Create a trigger to update the score of a question or answer after a review
+CREATE OR REPLACE FUNCTION update_score_after_review() RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.positive = 1 THEN
+    -- Increase the score by 1 if the review is positive
+    UPDATE QuestionOrAnswer
+    SET score = score + 1
+    WHERE questionAnswer_id = NEW.questionOrAnswer_id;
+  ELSIF NEW.positive = 0 THEN
+    -- Decrease the score by 1 if the review is not positive
+    UPDATE QuestionOrAnswer
+    SET score = score - 1
+    WHERE questionAnswer_id = NEW.questionOrAnswer_id;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger to execute the update_score_after_review function
+CREATE TRIGGER update_score_trigger
+AFTER INSERT ON Reviews
+FOR EACH ROW
+EXECUTE FUNCTION update_score_after_review();
+
+
+-- TRIGGER02 
+-- Create a trigger to insert a notification after a new publication
+CREATE OR REPLACE FUNCTION trigger_notifications_function() RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.user_id IS NOT NULL THEN
+        -- Insert a notification of type 'QuestionNotif'
+        INSERT INTO Notification (user_id, description)
+        VALUES (NEW.user_id, 'New answer or comment on your question.');
+    END IF;
+    
+    IF NEW.questionAnswer_id IS NOT NULL THEN
+        -- Insert a notification of type 'AnswerNotif'
+        INSERT INTO Notification (user_id, description)
+        VALUES (NEW.user_id, 'New comment on your answer');
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_notifications
+AFTER INSERT ON QuestionOrAnswer
+FOR EACH ROW
+EXECUTE FUNCTION trigger_notifications_function();
+
+
+
