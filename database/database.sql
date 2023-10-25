@@ -230,6 +230,3 @@ CREATE TRIGGER trigger_notifications
 AFTER INSERT ON QuestionOrAnswer
 FOR EACH ROW
 EXECUTE FUNCTION trigger_notifications_function();
-
-
-
