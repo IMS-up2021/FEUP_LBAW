@@ -1,24 +1,23 @@
-DROP SCHEMA lbaw23136 CASCADE;
+DROP SCHEMA IF EXISTS lbaw23136 CASCADE;
 CREATE SCHEMA lbaw23136;
 SET search_path TO lbaw23136;
 
-DROP TABLE IF EXISTS TagNotif CASCADE;
-DROP TABLE IF EXISTS Tag CASCADE;
-DROP TABLE IF EXISTS AnswerNotif CASCADE;
-DROP TABLE IF EXISTS QuestionNotif CASCADE;
-DROP TABLE IF EXISTS Notification CASCADE;
-DROP TABLE IF EXISTS Comment CASCADE;
-DROP TABLE IF EXISTS Answer CASCADE;
-DROP TABLE IF EXISTS Question CASCADE;
-DROP TABLE IF EXISTS QuestionOrAnswer CASCADE;
-DROP TABLE IF EXISTS Publication CASCADE;
-DROP TABLE IF EXISTS Admin CASCADE;
-DROP TABLE IF EXISTS Moderator CASCADE;
-DROP TABLE IF EXISTS Owner CASCADE;
-DROP TABLE IF EXISTS Users CASCADE;
-DROP TABLE IF EXISTS Subscription CASCADE;
-DROP TABLE IF EXISTS Bannings CASCADE;
-DROP TABLE IF EXISTS Reviews CASCADE;
+DROP TABLE IF EXISTS tag_notif CASCADE;
+DROP TABLE IF EXISTS tag CASCADE;
+DROP TABLE IF EXISTS answer_notif CASCADE;
+DROP TABLE IF EXISTS question_notif CASCADE;
+DROP TABLE IF EXISTS notification CASCADE;
+DROP TABLE IF EXISTS comment CASCADE;
+DROP TABLE IF EXISTS answer CASCADE;
+DROP TABLE IF EXISTS question CASCADE;
+DROP TABLE IF EXISTS question_or_answer CASCADE;
+DROP TABLE IF EXISTS publication CASCADE;
+DROP TABLE IF EXISTS admin CASCADE;
+DROP TABLE IF EXISTS moderator CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS subscription CASCADE;
+DROP TABLE IF EXISTS bannings CASCADE;
+DROP TABLE IF EXISTS reviews CASCADE;
 
 -----------------------------------------
 -- Domains
@@ -33,8 +32,8 @@ CREATE DOMAIN STATUS AS VARCHAR(255) NOT NULL CHECK (VALUE IN ('open', 'closed')
 -- Tables
 -----------------------------------------
 
--- We modified the table "User" to "Users", otherwise PostgreSQL gives an error
-CREATE TABLE Users (
+-- We modified the table "User" to "users", otherwise PostgreSQL gives an error
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -43,100 +42,95 @@ CREATE TABLE Users (
     profile_picture BYTEA
 );
 
-CREATE TABLE Owner (
-    owner_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (owner_id) REFERENCES Users(id) ON DELETE CASCADE
-);
-
-CREATE TABLE Moderator (
+CREATE TABLE moderator (
     moderator_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (moderator_id) REFERENCES Users(id) ON DELETE CASCADE
+    FOREIGN KEY (moderator_id) REFERENCES users(id) ON DELETE CASCADE 
 );
 
-CREATE TABLE Admin (
+CREATE TABLE admin (
     admin_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (admin_id) REFERENCES Users(id) ON DELETE CASCADE
+    FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE Tag (
+CREATE TABLE tag (
     id SERIAL PRIMARY KEY,
     tagName VARCHAR NOT NULL UNIQUE
 );
 
-CREATE TABLE Publication (
+CREATE TABLE publication (
     id SERIAL PRIMARY KEY,
-    owner_id INTEGER REFERENCES Owner(owner_id) ON DELETE CASCADE,
-    tag_id INTEGER REFERENCES Tag(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    tag_id INTEGER REFERENCES tag(id) ON DELETE CASCADE,
     content TEXT NOT NULL,
     date TODAY
 );
 
-CREATE TABLE QuestionOrAnswer(
+CREATE TABLE question_or_answer(
     questionAnswer_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (questionAnswer_id) REFERENCES Publication(id) ON DELETE CASCADE,
+    FOREIGN KEY (questionAnswer_id) REFERENCES publication(id) ON DELETE CASCADE,
     score INTEGER NOT NULL DEFAULT 0
 );
 
-CREATE TABLE Question(
+CREATE TABLE question(
     question_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (question_id) REFERENCES QuestionOrAnswer(questionAnswer_id) ON DELETE CASCADE,
+    FOREIGN KEY (question_id) REFERENCES question_or_answer(questionAnswer_id) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
     status STATUS
 );
 
-CREATE TABLE Answer(
+CREATE TABLE answer(
     answer_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (answer_id) REFERENCES QuestionOrAnswer(questionAnswer_id) ON DELETE CASCADE,
+    FOREIGN KEY (answer_id) REFERENCES question_or_answer(questionAnswer_id) ON DELETE CASCADE,
     question_id INTEGER NOT NULL REFERENCES Question(question_id) ON DELETE CASCADE
 );
 
-CREATE TABLE Comment(
+CREATE TABLE comment(
     comment_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (comment_id) REFERENCES Publication(id) ON DELETE CASCADE,
-    questionAnswer_id INTEGER NOT NULL REFERENCES QuestionOrAnswer(questionAnswer_id) ON DELETE CASCADE
+    FOREIGN KEY (comment_id) REFERENCES publication(id) ON DELETE CASCADE,
+    questionAnswer_id INTEGER NOT NULL REFERENCES question_or_answer(questionAnswer_id) ON DELETE CASCADE
 );
 
-CREATE TABLE Notification(
+CREATE TABLE notification(
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     description TEXT NOT NULL
 );
 
-CREATE TABLE QuestionNotif(
+CREATE TABLE question_notif(
     notification_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (notification_id) REFERENCES Notification(id) ON DELETE CASCADE,
+    FOREIGN KEY (notification_id) REFERENCES notification(id) ON DELETE CASCADE,
     question_id INTEGER NOT NULL REFERENCES Question(question_id) ON DELETE CASCADE
 );
 
-CREATE TABLE AnswerNotif(
+CREATE TABLE answer_notif(
     notification_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (notification_id) REFERENCES Notification(id) ON DELETE CASCADE,
-    answer_id INTEGER NOT NULL REFERENCES Answer(answer_id) ON DELETE CASCADE
+    FOREIGN KEY (notification_id) REFERENCES notification(id) ON DELETE CASCADE,
+    answer_id INTEGER NOT NULL REFERENCES answer(answer_id) ON DELETE CASCADE
 );
 
-CREATE TABLE TagNotif(
+CREATE TABLE tag_notif(
     notification_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (notification_id) REFERENCES Notification(id) ON DELETE CASCADE,
-    tag_id INTEGER NOT NULL REFERENCES Tag(id) ON DELETE CASCADE
+    FOREIGN KEY (notification_id) REFERENCES notification(id) ON DELETE CASCADE,
+    tag_id INTEGER NOT NULL REFERENCES tag(id) ON DELETE CASCADE
 );  
 
-CREATE TABLE Subscription(
-    user_id INTEGER NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
-    tag_id INTEGER NOT NULL REFERENCES Tag(id) ON DELETE CASCADE,
+CREATE TABLE subscription(
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    tag_id INTEGER NOT NULL REFERENCES tag(id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, tag_id),
     date TODAY
 );
 
-CREATE TABLE Bannings(
-    user_id INTEGER NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
-    admin_id INTEGER NOT NULL REFERENCES Admin(admin_id) ON DELETE CASCADE,
+CREATE TABLE bannings(
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    admin_id INTEGER NOT NULL REFERENCES admin(admin_id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, admin_id),
     date TODAY
 );
 
-CREATE TABLE Reviews(
-    user_id INTEGER NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
-    questionAnswer_id INTEGER NOT NULL REFERENCES QuestionOrAnswer(questionAnswer_id) ON DELETE CASCADE,
+CREATE TABLE reviews(
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    questionAnswer_id INTEGER NOT NULL REFERENCES question_or_answer(questionAnswer_id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, questionAnswer_id),
     positive BOOLEAN,
     date TODAY 
@@ -148,11 +142,11 @@ CREATE TABLE Reviews(
 -- INDEXES
 -----------------------------------------
 
-CREATE INDEX user_notification ON Notification USING btree (user_id);
+CREATE INDEX user_notification ON notification USING btree (user_id);
 
-CREATE INDEX score_index ON QuestionOrAnswer USING btree (score);
+CREATE INDEX score_index ON question_or_answer USING btree (score);
 
-CREATE INDEX date_index ON Publication USING btree (date);
+CREATE INDEX date_index ON publication USING btree (date);
 
 -- FTS INDEXES
 
@@ -177,7 +171,7 @@ FOR EACH ROW
 EXECUTE PROCEDURE question_search_update();
 
 -- Finally, create a GIN index for ts_vectors.
-CREATE INDEX question_title_idx ON Question USING GIN (tsvectors);
+CREATE INDEX question_title_idx ON question USING GIN (tsvectors);
 
 
 
@@ -190,14 +184,14 @@ CREATE OR REPLACE FUNCTION update_score_after_review() RETURNS TRIGGER AS $$
 BEGIN
   IF NEW.positive = 1 THEN
     -- Increase the score by 1 if the review is positive
-    UPDATE QuestionOrAnswer
+    UPDATE question_or_answer
     SET score = score + 1
-    WHERE questionAnswer_id = NEW.questionOrAnswer_id;
+    WHERE questionAnswer_id = NEW.question_or_answer_id;
   ELSIF NEW.positive = 0 THEN
     -- Decrease the score by 1 if the review is not positive
-    UPDATE QuestionOrAnswer
+    UPDATE question_or_answer
     SET score = score - 1
-    WHERE questionAnswer_id = NEW.questionOrAnswer_id;
+    WHERE questionAnswer_id = NEW.question_or_answer_id;
   END IF;
   RETURN NEW;
 END;
@@ -205,7 +199,7 @@ $$ LANGUAGE plpgsql;
 
 -- Create a trigger to execute the update_score_after_review function
 CREATE TRIGGER update_score_trigger
-AFTER INSERT ON Reviews
+AFTER INSERT ON reviews
 FOR EACH ROW
 EXECUTE FUNCTION update_score_after_review();
 
@@ -215,14 +209,14 @@ EXECUTE FUNCTION update_score_after_review();
 CREATE OR REPLACE FUNCTION trigger_notifications_function() RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.user_id IS NOT NULL THEN
-        -- Insert a notification of type 'QuestionNotif'
-        INSERT INTO Notification (user_id, description)
+        -- Insert a notification of type 'answer_notif'
+        INSERT INTO notification (user_id, description)
         VALUES (NEW.user_id, 'New answer or comment on your question.');
     END IF;
     
     IF NEW.questionAnswer_id IS NOT NULL THEN
-        -- Insert a notification of type 'AnswerNotif'
-        INSERT INTO Notification (user_id, description)
+        -- Insert a notification of type 'answer_notif'
+        INSERT INTO notification (user_id, description)
         VALUES (NEW.user_id, 'New comment on your answer');
     END IF;
 
@@ -231,6 +225,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_notifications
-AFTER INSERT ON QuestionOrAnswer
+AFTER INSERT ON question_or_answer
 FOR EACH ROW
 EXECUTE FUNCTION trigger_notifications_function();
