@@ -66,28 +66,28 @@ CREATE TABLE publication (
 );
 
 CREATE TABLE question_or_answer(
-    questionAnswer_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (questionAnswer_id) REFERENCES publication(id) ON DELETE CASCADE,
+    question_answer_id INTEGER PRIMARY KEY,
+    FOREIGN KEY (question_answer_id) REFERENCES publication(id) ON DELETE CASCADE,
     score INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE question(
     question_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (question_id) REFERENCES question_or_answer(questionAnswer_id) ON DELETE CASCADE,
+    FOREIGN KEY (question_id) REFERENCES question_or_answer(question_answer_id) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
-    status STATUS
+    status VARCHAR(255) NOT NULL CHECK (status IN ('open', 'closed')) DEFAULT 'open'
 );
 
 CREATE TABLE answer(
     answer_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (answer_id) REFERENCES question_or_answer(questionAnswer_id) ON DELETE CASCADE,
+    FOREIGN KEY (answer_id) REFERENCES question_or_answer(question_answer_id) ON DELETE CASCADE,
     question_id INTEGER NOT NULL REFERENCES Question(question_id) ON DELETE CASCADE
 );
 
 CREATE TABLE comment(
     comment_id INTEGER PRIMARY KEY,
     FOREIGN KEY (comment_id) REFERENCES publication(id) ON DELETE CASCADE,
-    questionAnswer_id INTEGER NOT NULL REFERENCES question_or_answer(questionAnswer_id) ON DELETE CASCADE
+    question_answer_id INTEGER NOT NULL REFERENCES question_or_answer(question_answer_id) ON DELETE CASCADE
 );
 
 CREATE TABLE notification(
@@ -130,8 +130,8 @@ CREATE TABLE bannings(
 
 CREATE TABLE reviews(
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    questionAnswer_id INTEGER NOT NULL REFERENCES question_or_answer(questionAnswer_id) ON DELETE CASCADE,
-    PRIMARY KEY (user_id, questionAnswer_id),
+    question_answer_id INTEGER NOT NULL REFERENCES question_or_answer(question_answer_id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, question_answer_id),
     positive BOOLEAN,
     date TODAY 
 );
@@ -174,7 +174,7 @@ EXECUTE PROCEDURE question_search_update();
 CREATE INDEX question_title_idx ON question USING GIN (tsvectors);
 
 
-
+/*
 -----------------------------------------
 -- TRIGGERS 
 -----------------------------------------
@@ -186,12 +186,12 @@ BEGIN
     -- Increase the score by 1 if the review is positive
     UPDATE question_or_answer
     SET score = score + 1
-    WHERE questionAnswer_id = NEW.question_or_answer_id;
+    WHERE question_answer_id = NEW.question_or_answer_id;
   ELSIF NEW.positive = 0 THEN
     -- Decrease the score by 1 if the review is not positive
     UPDATE question_or_answer
     SET score = score - 1
-    WHERE questionAnswer_id = NEW.question_or_answer_id;
+    WHERE question_answer_id = NEW.question_or_answer_id;
   END IF;
   RETURN NEW;
 END;
@@ -214,7 +214,7 @@ BEGIN
         VALUES (NEW.user_id, 'New answer or comment on your question.');
     END IF;
     
-    IF NEW.questionAnswer_id IS NOT NULL THEN
+    IF NEW.question_answer_id IS NOT NULL THEN
         -- Insert a notification of type 'answer_notif'
         INSERT INTO notification (user_id, description)
         VALUES (NEW.user_id, 'New comment on your answer');
@@ -228,3 +228,37 @@ CREATE TRIGGER trigger_notifications
 AFTER INSERT ON question_or_answer
 FOR EACH ROW
 EXECUTE FUNCTION trigger_notifications_function();
+*/
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'John Doe',
+  'admin@gmail.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
+  'Description'
+); -- 
+
+CREATE TABLE cards (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR NOT NULL,
+  user_id INTEGER REFERENCES users NOT NULL
+);
+
+CREATE TABLE items (
+  id SERIAL PRIMARY KEY,
+  card_id INTEGER NOT NULL REFERENCES cards ON DELETE CASCADE,
+  description VARCHAR NOT NULL,
+  done BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+
+INSERT INTO cards VALUES (DEFAULT, 'Things to do', 1);
+INSERT INTO items VALUES (DEFAULT, 1, 'Buy milk');
+INSERT INTO items VALUES (DEFAULT, 1, 'Walk the dog', true);
+
+INSERT INTO cards VALUES (DEFAULT, 'Things not to do', 1);
+INSERT INTO items VALUES (DEFAULT, 2, 'Break a leg');
+INSERT INTO items VALUES (DEFAULT, 2, 'Crash the car');
+
+INSERT INTO tag VALUES (1, 'tag1');
+INSERT INTO tag VALUES (2, 'tag2');

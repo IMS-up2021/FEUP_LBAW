@@ -7,6 +7,8 @@ use App\Http\Controllers\ItemController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\QuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +30,15 @@ Route::controller(CardController::class)->group(function () {
     Route::get('/cards/{id}', 'show');
 });
 
+Route::group(['middleware' => 'auth','prefix' => 'question'], function () {
+    Route::post('/',[QuestionController::class, 'createQuestion'])->name('createQuestion');
+    Route::get('/',[QuestionController::class, 'showCreateForm']);
+    Route::get('/{question}',[QuestionController::class, 'show']);
+
+});
+
+
+Route::get('/home', [HomeController::class, 'show'])->name('home');
 
 // API
 Route::controller(CardController::class)->group(function () {

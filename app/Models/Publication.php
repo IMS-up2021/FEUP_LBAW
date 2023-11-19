@@ -33,4 +33,9 @@ class Publication extends Model
     {
         return $this->belongsTo(Tag::class,'tag_id','id');
     }
+
+    public function questionOrAnswer()
+    {
+        return $this->hasOne(questionOrAnswer::class);
+    }
 }

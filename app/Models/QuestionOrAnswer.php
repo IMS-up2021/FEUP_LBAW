@@ -9,19 +9,20 @@ class QuestionOrAnswer extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'questionOrAnswer_id';
+    protected $primaryKey = 'question_answer_id';
 
     protected $table = 'question_or_answer';
 
     public $timestamps = false;
 
     protected $fillable = [
+        'question_answer_id',
         'score'
     ];
 
     public function publication()
     {
-        return $this->belongsTo(Publication::class);
+        return $this->belongsTo(Publication::class,'question_answer_id','id');
     }
 
 }
