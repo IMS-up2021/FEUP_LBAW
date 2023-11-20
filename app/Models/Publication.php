@@ -22,6 +22,9 @@ class Publication extends Model
         'date'
     ];
 
+    protected $casts = [
+        'date' => 'datetime',
+    ];
     // User who created the publication
     public function user()
     {
@@ -32,5 +35,10 @@ class Publication extends Model
     public function tag()
     {
         return $this->belongsTo(Tag::class,'tag_id','id');
+    }
+
+    public function questionOrAnswer()
+    {
+        return $this->hasOne(questionOrAnswer::class);
     }
 }

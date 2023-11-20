@@ -6,11 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TagNotif extends Model
-{CREATE TABLE tag_notif(
-    notification_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (notification_id) REFERENCES notification(id) ON DELETE CASCADE,
-    tag_id INTEGER NOT NULL REFERENCES tag(id) ON DELETE CASCADE
-);  
+{
     use HasFactory;
 
     protected $primaryKey = 'notification_id';	
