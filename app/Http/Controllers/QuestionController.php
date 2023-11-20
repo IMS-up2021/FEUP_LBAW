@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
+use App\Models\Answer;
 use App\Models\Question;
 use App\Models\Publication;
 use Illuminate\Http\Request;
 use App\Models\QuestionOrAnswer;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Tag;
 
 
 class QuestionController extends Controller
@@ -45,6 +46,40 @@ class QuestionController extends Controller
         }
     }
 
+    public function createAnswer(Request $request){
+        //Validate the request
+        $request->validate([
+            'content' => 'required|max:1000',
+            'tag_id' => 'required|exists:tag,id',
+            'question_id' => 'required|exists:question,question_id',
+        ]);
+
+        $publication = Publication::create([
+            'user_id' => Auth::id(),
+            'tag_id' =>  $request->tag_id, 
+            'content' => $request->content,
+        ]);
+        $questionOrAnswer = QuestionOrAnswer::create([
+            'question_answer_id' => $publication->id,
+        ]);
+
+        //Create the question
+        $answer = Answer::create([
+            'answer_id' => $questionOrAnswer->question_answer_id,
+            'question_id' => $request->question_id,
+        ]);
+
+        //Return the question
+        if($answer) {
+            return redirect('/question/'.$request->question_id.'');
+        }
+        else{ 
+            return redirect('/home?error=1');
+        }
+
+    }
+
+
     public function showCreateForm()
     {
         $tags = Tag::all();
@@ -53,13 +88,14 @@ class QuestionController extends Controller
         ]);
     }
 
-    public function show(Question $question){
-        $questionOrAnswer = $question->questionOrAnswer;
-        $publication = $questionOrAnswer->publication;
-        $questionOrAnswer->publication = $publication;
-        $question->questionOrAnswer = $questionOrAnswer;
+    public function show($id){
+        $question = Question::findOrFail($id);
+        $answers = Answer::where('question_id', $id)->get();
         return view('pages.question', [
-            'question' => $question
+            'question' => $question,
+            'answers' => $answers,
         ]);
     }
+
+
 }
