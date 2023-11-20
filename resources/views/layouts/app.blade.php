@@ -25,7 +25,10 @@
             <header>
                 <h1><a href="{{ url('/home') }}">BrainShare</a></h1>
                 @if (Auth::check())
-                    <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->username }}</span>
+                    <a class="button" href="{{ url('/logout') }}"> Logout </a> 
+                    <span>
+                        <a href="{{ url('/user/' . Auth::user()->id) }}">{{ Auth::user()->username }}</a>
+                    </span>
                 @endif
             </header>
             <section id="content">

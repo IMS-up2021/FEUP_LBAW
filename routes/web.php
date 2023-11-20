@@ -2,10 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\QuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,11 @@ Route::group(['middleware' => 'auth','prefix' => 'question'], function () {
     Route::post('/{id}', [QuestionController::class, 'createAnswer'])->name('createAnswer');
     Route::get('/{id}',[QuestionController::class, 'show']);
 
+});
+
+//User
+Route::group(['middleware' => 'auth','prefix' => 'user'], function () {
+    Route::get('/{id}',[UserController::class, 'show']);
 });
 
 // Authentication
