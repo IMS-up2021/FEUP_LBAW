@@ -71,7 +71,7 @@ class QuestionController extends Controller
 
         //Return the question
         if($answer) {
-            return redirect('/home?error=0');
+            return redirect('/question/'.$request->question_id.'');
         }
         else{ 
             return redirect('/home?error=1');
