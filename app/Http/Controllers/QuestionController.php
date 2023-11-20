@@ -7,6 +7,7 @@ use App\Models\Publication;
 use Illuminate\Http\Request;
 use App\Models\QuestionOrAnswer;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Tag;
 
 
 class QuestionController extends Controller
@@ -16,14 +17,14 @@ class QuestionController extends Controller
         //Validate the request
         $request->validate([
             'title' => 'required|max:255',
-           // 'tag_id' => 'required|exists:tags,id',
+            'tag_id' => 'required|exists:tag,id',
             'content' => 'required|max:1000',
             'date' => 'required|date'
         ]);
 
         $publication = Publication::create([
             'user_id' => Auth::id(),
-            'tag_id' =>  1, // modificar para isto $request->tag_id,
+            'tag_id' =>  $request->tag_id, 
             'content' => $request->content,
             'date' => date('Y-m-d H:i:s')
         ]);
@@ -48,7 +49,10 @@ class QuestionController extends Controller
 
     public function showCreateForm()
     {
-        return view('pages.createQuestion');
+        $tags = Tag::all();
+        return view('pages.createQuestion', [
+            'tags' =>  $tags
+        ]);
     }
 
     public function show(Question $question){
