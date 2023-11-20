@@ -19,12 +19,15 @@ class HomeController extends Controller
             return redirect('/login');
         }
         
+        $questions = Question::all();
+        /*
+        // Utilizar para so ver perguntas do auth user
         $questions = Question::whereHas('questionOrAnswer',function($query){
             $query->whereHas('publication',function($query){
                 $query->where('user_id',Auth::id());
             });
         })->get();
-        
+        */
         return view('pages.home', [
             'questions' => $questions,  
         ]);

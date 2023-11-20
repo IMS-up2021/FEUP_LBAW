@@ -54,7 +54,7 @@ CREATE TABLE admin (
 
 CREATE TABLE tag (
     id SERIAL PRIMARY KEY,
-    tagName VARCHAR NOT NULL UNIQUE
+    tag_name VARCHAR NOT NULL UNIQUE
 );
 
 CREATE TABLE publication (
@@ -234,6 +234,14 @@ INSERT INTO users VALUES (
   DEFAULT,
   'John Doe',
   'admin@gmail.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
+  'Description'
+); -- 
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Sarah Doe',
+  'admin2@gmail.com',
   '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
   'Description'
 ); -- 

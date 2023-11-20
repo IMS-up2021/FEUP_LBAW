@@ -15,7 +15,7 @@
         <select id="tag_id" name="tag_id" required>
             @foreach($tags as $tag)
                 <option value="{{ $tag->id }}" {{ old('tag_id') == $tag->id ? 'selected' : '' }}>
-                    {{ $tag->tagname }}
+                    {{ $tag->tag_name }}
                 </option>
             @endforeach
         </select>
