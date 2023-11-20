@@ -22,6 +22,9 @@ class Publication extends Model
         'date'
     ];
 
+    protected $casts = [
+        'date' => 'datetime',
+    ];
     // User who created the publication
     public function user()
     {

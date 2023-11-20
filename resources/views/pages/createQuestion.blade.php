@@ -20,10 +20,6 @@
             @endforeach
         </select>
 
-    <!-- Question Date -->
-    <label for="date">Date:</label>
-    <input type="date" id="date" name="date" value="{{ old('date') }}" required>
-
     <button type="submit">Create Question</button>
 </form>
 @endsection

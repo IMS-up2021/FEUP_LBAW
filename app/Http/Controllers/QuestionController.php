@@ -19,14 +19,12 @@ class QuestionController extends Controller
             'title' => 'required|max:255',
             'tag_id' => 'required|exists:tag,id',
             'content' => 'required|max:1000',
-            'date' => 'required|date'
         ]);
 
         $publication = Publication::create([
             'user_id' => Auth::id(),
             'tag_id' =>  $request->tag_id, 
             'content' => $request->content,
-            'date' => date('Y-m-d H:i:s')
         ]);
         $questionOrAnswer = QuestionOrAnswer::create([
             'question_answer_id' => $publication->id,
