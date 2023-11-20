@@ -15,19 +15,14 @@ class Answer extends Model
 
     public $timestamps = false;
 
-    CREATE TABLE answer(
-        answer_id INTEGER PRIMARY KEY,
-        FOREIGN KEY (answer_id) REFERENCES question_or_answer(questionAnswer_id) ON DELETE CASCADE,
-        question_id INTEGER NOT NULL REFERENCES Question(question_id) ON DELETE CASCADE
-    );
-
     protected $fillable = [
+        'answer_id',
         'question_id'
     ];
 
     public function questionOrAnswer()
     {
-        return $this->belongsTo(QuestionOrAnswer::class);
+        return $this->belongsTo(QuestionOrAnswer::class,'answer_id', 'question_answer_id');
     }
 
     public function question()

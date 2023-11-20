@@ -28,7 +28,8 @@ Route::get('/home', [HomeController::class, 'show'])->name('home');
 Route::group(['middleware' => 'auth','prefix' => 'question'], function () {
     Route::post('/',[QuestionController::class, 'createQuestion'])->name('createQuestion');
     Route::get('/',[QuestionController::class, 'showCreateForm']);
-    Route::get('/{question}',[QuestionController::class, 'show']);
+    Route::post('/{id}', [QuestionController::class, 'createAnswer'])->name('createAnswer');
+    Route::get('/{id}',[QuestionController::class, 'show']);
 
 });
 
