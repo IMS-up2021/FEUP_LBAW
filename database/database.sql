@@ -39,6 +39,7 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     description TEXT,
+    remember_token VARCHAR,
     profile_picture BYTEA
 );
 
@@ -59,8 +60,8 @@ CREATE TABLE tag (
 
 CREATE TABLE publication (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    tag_id INTEGER REFERENCES tag(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    tag_id INTEGER NOT NULL REFERENCES tag(id) ON DELETE CASCADE,
     content TEXT NOT NULL,
     date TODAY
 );
@@ -230,6 +231,9 @@ FOR EACH ROW
 EXECUTE FUNCTION trigger_notifications_function();
 */
 
+
+--------------POPULATE----------------
+
 INSERT INTO users VALUES (
   DEFAULT,
   'John Doe',
@@ -246,27 +250,54 @@ INSERT INTO users VALUES (
   'Description'
 ); -- 
 
-CREATE TABLE cards (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR NOT NULL,
-  user_id INTEGER REFERENCES users NOT NULL
-);
 
-CREATE TABLE items (
-  id SERIAL PRIMARY KEY,
-  card_id INTEGER NOT NULL REFERENCES cards ON DELETE CASCADE,
-  description VARCHAR NOT NULL,
-  done BOOLEAN NOT NULL DEFAULT FALSE
-);
+INSERT INTO tag (id, tag_name) VALUES
+  (1, 'Technology'),
+  (2, 'Programming'),
+  (3, 'Travel'),
+  (4, 'Food'),
+  (5, 'Music');
 
+-- User 1 publications
+INSERT INTO publication (id,user_id, tag_id, content, date) VALUES
+  (1000, 1, 1, 'Exploring the latest trends in technology.', CURRENT_DATE),
+  (1001, 1, 2, 'Coding tips for beginners.', CURRENT_DATE),
+  (1002, 1, 3, 'My recent travel adventures.', CURRENT_DATE),
+  (1003, 1, 4, 'Delicious food discoveries.', CURRENT_DATE),
+  (1004, 1, 5, 'The impact of music on our lives.', CURRENT_DATE);
 
-INSERT INTO cards VALUES (DEFAULT, 'Things to do', 1);
-INSERT INTO items VALUES (DEFAULT, 1, 'Buy milk');
-INSERT INTO items VALUES (DEFAULT, 1, 'Walk the dog', true);
+-- User 2 publications
+INSERT INTO publication (id,user_id, tag_id, content, date) VALUES
+  (1005, 2, 1, 'Reviewing the newest tech gadgets.', CURRENT_DATE),
+  (1006, 2, 2, 'Advanced programming techniques.', CURRENT_DATE),
+  (1007, 2, 3, 'A journey to unexplored destinations.', CURRENT_DATE),
+  (1008, 2, 4, 'Cooking experiences from around the world.', CURRENT_DATE),
+  (1009, 2, 5, 'The intersection of music and culture.', CURRENT_DATE);
 
-INSERT INTO cards VALUES (DEFAULT, 'Things not to do', 1);
-INSERT INTO items VALUES (DEFAULT, 2, 'Break a leg');
-INSERT INTO items VALUES (DEFAULT, 2, 'Crash the car');
+-- Questions and Answers
+INSERT INTO question_or_answer (question_answer_id, score) VALUES
+  (1000, 10), -- Assuming question_answer_id 1 corresponds to the first publication
+  (1001, 5),
+  (1002, 8),
+  (1003, 2),
+  (1004, 15),
+  (1005, 7),
+  (1006, 12),
+  (1007, 3),
+  (1008, 9),
+  (1009, 11);
 
-INSERT INTO tag VALUES (1, 'tag1');
-INSERT INTO tag VALUES (2, 'tag2');
+-- Questions
+INSERT INTO question (question_id, title, status) VALUES
+  (1000, 'How can technology shape our future?', 'open'),
+  (1001, 'Best practices for coding in 2023?', 'closed'),
+  (1002, 'Share your favorite travel destination.', 'open'),
+  (1003, 'What''s your go-to dish to cook at home?', 'closed'),
+  (1004, 'How does music influence your daily life?', 'open');
+-- Answers
+INSERT INTO answer (answer_id, question_id) VALUES
+  (1005, 1000),
+  (1006, 1001),
+  (1007, 1002),
+  (1008, 1003),
+  (1009, 1004);

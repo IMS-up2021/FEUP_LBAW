@@ -6,11 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AnswerNotif extends Model
-{CREATE TABLE answer_notif(
-    notification_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (notification_id) REFERENCES notification(id) ON DELETE CASCADE,
-    answer_id INTEGER NOT NULL REFERENCES answer(answer_id) ON DELETE CASCADE
-);
+{
 
     use HasFactory;
 
