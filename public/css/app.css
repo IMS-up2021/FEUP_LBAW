@@ -7,7 +7,9 @@ body {
     color: #23232e;
     font-family: 'Poppins', sans-serif;
   }
-
+header a {
+  color: #ffffff;
+}
   #content{
     padding-left: 0.5em;
   }
@@ -104,7 +106,7 @@ body {
     color: #23232e;
   }
   a {
-    color: #ffffff;
+    color: #23232e;
   }
   input[type=text]:focus,
   input[type=email]:focus,
