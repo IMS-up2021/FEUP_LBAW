@@ -20,16 +20,17 @@ class HomeController extends Controller
         }
         
         $questions = Question::all();
-        /*
-        // Utilizar para so ver perguntas do auth user
-        $questions = Question::whereHas('questionOrAnswer',function($query){
-            $query->whereHas('publication',function($query){
-                $query->where('user_id',Auth::id());
-            });
-        })->get();
-        */
+        
+        $top_questions = Question::select('question.*')
+        ->join('question_or_answer', 'question_or_answer.question_answer_id', '=', 'question.question_id')
+        ->orderBy('question_or_answer.score', 'desc')
+        ->take(3)
+        ->get();
+    
+
         return view('pages.home', [
             'questions' => $questions,  
+            'top_questions' => $top_questions
         ]);
     }
 }
