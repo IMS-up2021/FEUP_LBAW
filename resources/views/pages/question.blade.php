@@ -46,6 +46,14 @@
     <p>Status: {{ $question->status }}</p>
     <p>Posted on: {{ $question->questionOrAnswer->publication->date->format('Y-m-d H:i:s') }}</p>
     <p>Created by: {{ $user_question->username }}</p>
+    
+    @if(Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id())
+    <form method="GET" action="{{ url('/question/' . $question->question_id . '/edit') }}">
+        <input type="hidden" name="id" value="{{ $question->question_id }}">
+        <button type="submit">Edit Question</button>
+    </form>   
+    @endif
+
     @if(Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id())
     <form method="POST">
         @csrf

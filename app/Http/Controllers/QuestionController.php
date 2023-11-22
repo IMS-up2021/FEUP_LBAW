@@ -101,6 +101,17 @@ class QuestionController extends Controller
         ]);
     }
 
+    public function showEditForm($id)
+    {
+        $tags = Tag::all();
+        $question = Question::findOrFail($id);
+        if (Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id()) {
+            return view('pages.editQuestion', ['question' => $question, 'tags' => $tags]);
+        } else {
+            return redirect('/home?error=2'); 
+        }
+    }
+
     public function deleteQuestion($id)
     {
         $question = Question::find($id);
@@ -116,5 +127,34 @@ class QuestionController extends Controller
         $question->delete();
 
         return redirect('/home?success=1');
+    }
+
+    public function updateQuestion(Request $request)
+    {
+        $question = Question::findOrFail($request->id);
+
+        // Check if the authenticated user is the creator of the question
+        if (Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id()) {
+            // Validate the request
+            $request->validate([
+                'title' => 'required|max:255',
+                'content' => 'required|max:1000',
+                'tag_id' => 'required|exists:tag,id',
+
+            ]);
+
+            $question->update([
+                'title' => $request->title,
+            ]);
+
+            $question->questionOrAnswer->publication->update([
+                'content' => $request->content,
+                'tag_id' => $request->tag_id,
+            ]);
+
+            return redirect('question/'. $question->question_id); 
+        } else {
+            return redirect('/home?error=2'); 
+        }
     }
 }
