@@ -75,7 +75,8 @@ class QuestionController extends Controller
             return response()->json([
                 'content' => $request->content,
                 'user' => Auth::user(), 
-                'date' => $request->date
+                'date' => $request->date,
+                'answer_id' => $answer->answer_id
             ]);
         } else {
             return response()->json(['error' => 'Failed to create answer'], JsonResponse::HTTP_BAD_REQUEST);
@@ -157,4 +158,19 @@ class QuestionController extends Controller
             return redirect('/home?error=2'); 
         }
     }
+
+    public function deleteAnswer(Request $request,$id)
+{
+    $answer = Answer::findOrFail($request->answer_id);
+
+    $question = Question::findOrFail($id);
+
+    if (Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id()) {
+        $answer->delete();
+        return redirect('question/'. $question->question_id); 
+    } else {
+        return redirect('question/' . $question->$question_id . '?error=6'); // Unauthorized access
+    }
+}
+
 }
