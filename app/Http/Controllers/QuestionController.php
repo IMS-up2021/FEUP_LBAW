@@ -100,6 +100,4 @@ class QuestionController extends Controller
             'answers' => $answers,
         ]);
     }
-
-
 }
