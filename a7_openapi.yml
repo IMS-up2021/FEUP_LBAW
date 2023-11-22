@@ -1,0 +1,757 @@
+openapi: '3.0.0'
+info:
+  version: '1.0'
+  title: 'LBAW BrainShare Web API'
+  description: 'Web Resources Specification (A7) for collaborative Q&A application'
+
+servers:
+  - url: https://api.server.test/v1
+    description: Production server
+
+externalDocs:
+ description: Find more info here. ######
+ url: https://git.fe.up.pt/lbaw/lbaw2324/lbaw23101.git
+
+tags:
+ - name: 'M01: Authentication and User Profile'
+ - name: 'M02: Publications'
+ - name: 'M03: Notifications'
+ - name: 'M04: Moderation'
+ - name: 'M05: Administration'
+
+
+paths:
+
+#M01 - Authentication and Individual Profile
+
+  /login:
+      get:
+        operationId: R101
+        summary: 'R101: Login Form'
+        description: 'Form page that allows user login. Access: PUB'
+        tags:
+          - 'M01: Authentication and User Profile'
+        responses:
+          '200':
+            description: 'Ok. Show log-in UI'
+      post:
+        operationId: R102
+        summary: 'R102: Login Action'
+        description: 'Web resource that verifies user input in order to perform authentication. Access: GST, USR, MOD, ADM'
+        tags:
+          - 'M01: Authentication and User Profile'
+
+        requestBody:
+          required: true
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                type: object
+                properties:
+                  email:          # <!--- form field name
+                    type: string
+                  password:    # <!--- form field name
+                    type: string
+                required:
+                  - email
+                  - password
+
+        responses:
+          '302':
+            description: 'Redirect after processing the login credentials.'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'Successful authentication. Redirect to home page.'
+                    value: '/home'
+                  302Error:
+                    description: 'Failed authentication. Redirect to login form.'
+                    value: '/login'
+
+  /logout:
+
+    post:
+      operationId: R103
+      summary: 'R103: Logout Action'
+      description: 'Web resource that logs out the user. Access: USR'
+      tags:
+        - 'M01: Authentication and User Profile'
+      responses:
+        '302':
+          description: 'Redirect after processing logout.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful logout. Redirect to home.'
+                  value: '/home'
+
+  /register:
+    get:
+      operationId: R104
+      summary: 'R104: Register Form'
+      description: 'Form page that allows user to register themselves into the application. Access: GST, ADM'
+      tags:
+        - 'M01: Authentication and User Profile'
+      responses:
+        '200':
+          description: 'Ok. Show register UI'
+
+    post:
+      operationId: R105
+      summary: 'R105: Register Action'
+      description: 'This web resource registers the user into the system, processing the new user registration form submission. Access: GST, ADM'
+      tags:
+        - 'M01: Authentication and User Profile'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                birthdate:
+                  type: string
+                  format: date
+                gender:
+                  type: string
+                password:
+                  type: string
+                password_confirmation:
+                  type: string
+                picture:
+                  type: object
+                  format: binary
+              required:
+                - name
+                - email
+                - birthdate
+                - password
+                - password_confirmation
+
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful registration. Redirect to home page.'
+                  value: '/home'
+                302Failure:
+                  description: 'Failed registration. Redirect to register form.'
+                  value: '/register'
+
+
+  /users/{user_id}:
+    get:
+      operationId: R106
+      summary: 'R106: View user profile page.'
+      description: 'Shows the individual user profile page, which includes a form to edit profile details. Access: USR, MOD, ADM'
+      tags:
+        - 'M01: Authentication and User Profile'
+
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Show view profile UI'
+
+
+  /users/{user_id}/edit:
+
+    get:
+      operationId: R107
+      summary: 'R107: Edit Profile Form'
+      description: 'Form page that allows user to edit their profile in the application. Access: AUTH, MOD, ADM'
+      tags:
+        - 'M01: Authentication and User Profile'
+
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Show edit profile UI'
+
+    post:
+        operationId: R108
+        summary: 'R108: Edit Profile Action'
+        description: 'This web resource allows the user to change its user profile information. Access: OWN, ADM'
+        tags:
+          - 'M01: Authentication and User Profile'
+        
+        parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+
+        requestBody:
+          required: false
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  birthdate:
+                    type: string
+                    format: date
+                  password:
+                    type: string
+                  password_confirmation:
+                    type: string
+                  gender:
+                    type: string
+                  picture:
+                    type: object
+                    format: binary
+
+        responses:
+          '302':
+            description: 'Redirect after processing the updated user information.'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'Successful update. Redirect to user page.'
+                    value: '/user{id}'
+                  302Failure:
+                    description: 'Failed update. Redirect to same update user information page.'
+                    value: '/updateUser/{id}'
+
+
+#M02 - Publications
+
+  /publications/{tag_id}:
+    get:
+      operationId: R201
+      summary: 'R201: View tag.'
+      description: 'Shows an individual tag along with all of the posts associated with it. Access: GST, USR, MOD, ADM'
+
+      tags:
+        - 'M02: Publications'
+
+      parameters:
+        - in: path
+          name: tag_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Show tag UI'
+  
+  /publications/{tag_id}/{question_id}:
+    get:
+      operationId: R202
+      summary: 'R202: View question.'
+      description: 'Shows an individual question along with all of the answers associated with it. Access: GST, USR, MOD, ADM'
+      tags:
+        - 'M02: Publications'
+
+      parameters:
+        - in: path
+          name: tag_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: question_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Show specific question UI'
+
+
+
+  /publications/{tag_id}/{question_id}/comments:
+    get:
+      operationId: R203
+      summary: 'R203: View question comments.'
+      description: 'Shows comments associated with an individual question. Access: GST, AUTH, MOD, ADM'
+      tags:
+        - 'M02: Publications'
+
+      parameters:
+        - in: path
+          name: tag_id
+          schema:
+            type: integer
+          required: true
+
+        - in: path
+          name: question_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Show comments UI related to specific question'
+
+  /publications/{tag_id}/{answer_id}/comments:
+    get:
+      operationId: R204
+      summary: 'R204: View answer comments.'
+      description: 'Shows comments associated with an individual answer. Access: GST, USR, MOD, ADM'
+      tags:
+        - 'M02: Publications'
+
+      parameters:
+        - in: path
+          name: tag_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: answer_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Show comments UI related to specific answer'
+
+
+  /api/publications:
+    get:
+      operationId: R205
+      summary: 'R205: Search publications API'
+      description: 'Searches for publication and returns the results as JSON. Access: PUB.'
+
+      tags:
+        - 'M02: Publications'
+
+      parameters:
+        - in: query
+          name: query
+          description: String to use for full-text search
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: tag
+          description: Specific tag to be searched on
+          schema:
+            type: string
+          required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    title:
+                      type: string
+                    tag:
+                      type: string
+
+                example:
+                  - id: 1
+                    title: Renting a car
+                    content: Where can i rent a car in Porto?
+                    tag: Porto
+
+
+  /api/tags:
+    get:
+      operationId: R206
+      summary: 'R206: Search tags API'
+      description: 'Searches for tags and returns the results as JSON. Access: PUB.'
+
+      tags:
+        - 'M02: Publications'
+
+      parameters:
+        - in: query
+          name: query
+          description: String to use for full-text search
+          schema:
+            type: string
+          required: true
+
+      responses:
+          '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+
+                  example:
+                    - name: Porto
+                      description: Tag related to everything that has to do with the city of Porto, Portugal.
+
+
+  /publications/downvote/{question_answer_id}:
+    post:
+      operationId: R207
+      summary: 'R207: Downvote Question or Answer'
+      description: 'Allows the user to downvote a question or answer. Access: USR, MOD, ADM'
+      tags:
+        - 'M02: Publications'
+
+      parameters:
+        - in: path
+          name: question_answer_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Downvoted question/answer successfully.'
+
+
+  /publications/upvote/{question_answer_id}:
+    post:
+      operationId: R208
+      summary: 'R208: Upvote Question or Answer'
+      description: 'Allows the user to upvote a question or answer. Access: USR, MOD, ADM'
+      tags:
+        - 'M02: Publications'
+
+      parameters:
+        - in: path
+          name: question_answer_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Upvoted question/answer successfully.'
+
+
+#M03 - Notifications
+
+  /notifications:
+    get:
+      operationId: R301
+      summary: 'R301: View Notifications'
+      description: 'Shows the notifications page, displaying updates related to the users subscriptions. Access: GST, USR, MOD, ADM'
+      tags:
+        - 'M03: Notifications'
+
+      responses:
+        '200':
+          description: 'Ok. Show notifications UI'
+
+  /notifications/subscribe/tag/{tag_id}:
+    post:
+      operationId: R302
+      summary: 'R302: Subscribe to Tag'
+      description: 'Allows the user to subscribe to a specific tag, receiving notifications for new questions, answers, or comments related to that tag. Access: USR, MOD, ADM'
+      tags:
+        - 'M03: Notifications'
+
+      parameters:
+        - in: path
+          name: tag_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Subscribed to the tag successfully.'
+
+  /notifications/unsubscribe/tag/{tag_id}:
+    post:
+      operationId: R303
+      summary: 'R303: Unsubscribe from Tag'
+      description: 'Allows the user to unsubscribe from a specific tag, stopping notifications for new questions, answers, or comments related to that tag. Access: USR, MOD, ADM'
+      tags:
+        - 'M03: Notifications'
+
+      parameters:
+        - in: path
+          name: tag_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Unsubscribed from the tag successfully.'
+
+
+  /notifications/subscribe/question/{question_id}:
+    post:
+      operationId: R304
+      summary: 'R304: Subscribe to Question'
+      description: 'Allows the user to subscribe to a specific question, receiving notifications for new answers or comments. Access: USR, MOD, ADM'
+      tags:
+        - 'M03: Notifications'
+
+      parameters:
+        - in: path
+          name: question_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Subscribed successfully.'
+
+
+  /notifications/unsubscribe/question/{question_id}:
+    post:
+      operationId: R305
+      summary: 'R305: Unsubscribe from Question'
+      description: 'Allows the user to unsubscribe from a specific question, stopping notifications for new answers or comments. Access: USR, MOD, ADM'
+      tags:
+        - 'M03: Notifications'
+
+      parameters:
+        - in: path
+          name: question_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Unsubscribed successfully.'
+
+# M04 - Moderation
+
+  /moderation/publication/remove/{publication_id}:
+    post:
+      operationId: R401
+      summary: 'R401: remove publication'
+      description: 'Allows the moderator to remove a publication, be it a question, an answer or a comment. Access: MOD, ADM'
+      tags:
+        - 'M04: Moderation'
+
+      parameters:
+        - in: path
+          name: publication_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Publication deleted successfully.'
+
+
+  /moderation/publication/lock/{question_id}:
+    post:
+      operationId: R402
+      summary: 'R402: lock question'
+      description: 'Allows the moderator to lock a question, allowing no further answers or comments to be made to it. Access: MOD, ADM'
+      tags:
+        - 'M04: Moderation'
+
+      parameters:
+        - in: path
+          name: question_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Question locked successfully.'
+
+  /moderation/users/ban/{tag_id}/{user_id}:
+    post:
+      operationId: R403
+      summary: 'R403: Ban user from tag.'
+      description: 'Bans a specific user from a tag, not allowing him to comment, post answers or questions or even access the tag any further. Access: MOD, ADM'
+      tags:
+        - 'M04: Moderation'
+
+      parameters:
+        - in: path
+          name: tag_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. User banned from tag'
+
+  /moderation/users/unban/{tag_id}/{user_id}:
+      post:
+        operationId: R404
+        summary: 'R404: unban user from tag.'
+        description: 'unbans a specific user from a tag. Access: MOD, ADM'
+        tags:
+          - 'M04: Moderation'
+
+        parameters:
+          - in: path
+            name: tag_id
+            schema:
+              type: integer
+            required: true
+          - in: path
+            name: user_id
+            schema:
+              type: integer
+            required: true
+
+        responses:
+          '200':
+            description: 'Ok. User unbanned from tag'
+
+
+# M05 - Administration
+
+  /administration/tag/create:
+
+      get:
+        operationId: R501
+        summary: 'R501: Tag creation Form'
+        description: 'Form page that allows admin to create a tag. Access: ADM'
+        tags:
+          - 'M05: Administration'
+        responses:
+          '200':
+            description: 'Ok. Show tag creation UI'
+      post:
+        operationId: R502
+        summary: 'R502: tag creation'
+        description: 'Web resource that verifies admin input in order to create a tag. Access: ADM'
+        tags:
+          - 'M05: Administration'
+
+        requestBody:
+          required: true
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                type: object
+                properties:
+                  name:          
+                    type: string
+                  description:    
+                    type: string
+                required:
+                  - name
+                  - description
+
+        responses:
+          '302':
+            description: 'Redirect after processing the login credentials.'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'Successful tag creation. Redirect to home page.'
+                    value: '/publications/{tag_id}'
+                  302Error:
+                    description: 'Failed to create. Redirect to create tag form.'
+                    value: '/administration/tag/create'
+
+
+  /administration/users/ban/{user_id}:
+      post:
+        operationId: R503
+        summary: 'R503: Ban user site-wide.'
+        description: 'Bans a specific user from the website, not allowing him to access the site at all. Access: ADM'
+        tags:
+          - 'M05: Administration'
+
+        parameters:
+          - in: path
+            name: user_id
+            schema:
+              type: integer
+            required: true
+
+        responses:
+          '200':
+            description: 'Ok. User banned'
+
+  /administration/users/unban/{user_id}:
+      post:
+        operationId: R504
+        summary: 'R504: Unban user site-wide.'
+        description: 'Unbans a specific user from the website, allowing it to access all of its features again. Access: ADM'
+        tags:
+          - 'M05: Administration'
+
+        parameters:
+          - in: path
+            name: user_id
+            schema:
+              type: integer
+            required: true
+
+        responses:
+          '200':
+            description: 'Ok. User unbanned'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
