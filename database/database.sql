@@ -260,19 +260,19 @@ INSERT INTO tag (id, tag_name) VALUES
 
 -- User 1 publications
 INSERT INTO publication (id,user_id, tag_id, content, date) VALUES
-  (1000, 1, 1, 'Exploring the latest trends in technology.', CURRENT_DATE),
-  (1001, 1, 2, 'Coding tips for beginners.', CURRENT_DATE),
-  (1002, 1, 3, 'My recent travel adventures.', CURRENT_DATE),
-  (1003, 1, 4, 'Delicious food discoveries.', CURRENT_DATE),
-  (1004, 1, 5, 'The impact of music on our lives.', CURRENT_DATE);
+  (1000, 1, 1, 'Exploring the latest trends in technology.', CURRENT_TIMESTAMP),
+  (1001, 1, 2, 'Coding tips for beginners.', CURRENT_TIMESTAMP),
+  (1002, 1, 3, 'My recent travel adventures.', CURRENT_TIMESTAMP),
+  (1003, 1, 4, 'Delicious food discoveries.', CURRENT_TIMESTAMP),
+  (1004, 1, 5, 'The impact of music on our lives.', CURRENT_TIMESTAMP);
 
 -- User 2 publications
 INSERT INTO publication (id,user_id, tag_id, content, date) VALUES
-  (1005, 2, 1, 'Reviewing the newest tech gadgets.', CURRENT_DATE),
-  (1006, 2, 2, 'Advanced programming techniques.', CURRENT_DATE),
-  (1007, 2, 3, 'A journey to unexplored destinations.', CURRENT_DATE),
-  (1008, 2, 4, 'Cooking experiences from around the world.', CURRENT_DATE),
-  (1009, 2, 5, 'The intersection of music and culture.', CURRENT_DATE);
+  (1005, 2, 1, 'Reviewing the newest tech gadgets.', CURRENT_TIMESTAMP),
+  (1006, 2, 2, 'Advanced programming techniques.', CURRENT_TIMESTAMP),
+  (1007, 2, 3, 'A journey to unexplored destinations.', CURRENT_TIMESTAMP),
+  (1008, 2, 4, 'Cooking experiences from around the world.', CURRENT_TIMESTAMP),
+  (1009, 2, 5, 'The intersection of music and culture.', CURRENT_TIMESTAMP);
 
 -- Questions and Answers
 INSERT INTO question_or_answer (question_answer_id, score) VALUES
