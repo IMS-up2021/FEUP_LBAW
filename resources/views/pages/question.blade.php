@@ -62,6 +62,26 @@
 
             deleteForm.appendChild(deleteButton);
             answerContainer.appendChild(deleteForm);
+            
+            // Create form for editing the answer
+            var editForm = document.createElement('form');
+            editForm.action = '{{ route('showEditAnswerForm', ['id' => $question->question_id, 'answer_id' => 'REPLACE_WITH_ANSWER_ID']) }}'.replace('REPLACE_WITH_ANSWER_ID', data.answer_id);
+            editForm.method = 'GET';
+
+            // Add answer ID input for editing
+            var editAnswerIdInput = document.createElement('input');
+            editAnswerIdInput.type = 'hidden';
+            editAnswerIdInput.name = 'answer_id';
+            editAnswerIdInput.value = data.answer_id; 
+            editForm.appendChild(editAnswerIdInput);
+
+            // Add edit button
+            var editButton = document.createElement('button');
+            editButton.type = 'submit';
+            editButton.textContent = 'Edit Answer';
+
+            editForm.appendChild(editButton);
+            answerContainer.appendChild(editForm);
 
             answersContainer.appendChild(answerContainer);
 
@@ -93,9 +113,7 @@
         <input type="hidden" name="id" value="{{ $question->question_id }}">
         <button type="submit">Edit Question</button>
     </form>   
-    @endif
 
-    @if(Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id())
     <form method="POST">
         @csrf
         @method('DELETE')
@@ -124,7 +142,12 @@
             <input type="hidden" name="answer_id" value="{{ $answer->answer_id }}">
             <button type="submit" onclick="return confirm('Are you sure you want to delete this answer?')">Delete Answer</button>
         </form>
+        <form method="GET" action="{{ route('showEditAnswerForm', ['id' => $question->question_id, 'answer_id' => $answer->answer_id]) }}">
+            <input type="hidden" name="answer_id" value="{{ $answer->answer_id }}">
+            <button type="submit">Edit Answer</button>
+        </form>   
         @endif
+        
     @endforeach
 </div>
 

@@ -113,6 +113,13 @@ class QuestionController extends Controller
         }
     }
 
+    public function showEditAnswerForm($id, $answer_id)
+{
+    $answer = Answer::findOrFail($answer_id);
+    $question = Question::findOrFail($id);
+    return view('pages.editAnswer', ['answer' => $answer, 'question' => $question]);
+}
+
     public function deleteQuestion($id)
     {
         $question = Question::find($id);
@@ -170,6 +177,28 @@ class QuestionController extends Controller
         return redirect('question/'. $question->question_id); 
     } else {
         return redirect('question/' . $question->$question_id . '?error=6'); // Unauthorized access
+    }
+}
+
+public function updateAnswer(Request $request, $question_id, $answer_id)
+{
+    $answer = Answer::findOrFail($answer_id);
+
+    $question = Question::findOrFail($question_id);
+    
+    // Validate the request
+    $request->validate([
+        'content' => 'required|max:1000',
+    ]);
+    if (Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id()) {
+
+        $answer->questionOrAnswer->publication->update([
+        'content' => $request->content,
+    ]);
+
+        return redirect('question/'. $question->question_id); 
+    } else {
+        return redirect('question/' . $question->$question_id . '?error=6'); 
     }
 }
 
