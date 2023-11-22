@@ -33,4 +33,19 @@ class HomeController extends Controller
             'top_questions' => $top_questions
         ]);
     }
+
+    public function search(Request $request)
+    {
+        $search_input = $request->search;
+        $search_terms = explode(' ', trim($search_input));
+
+        $questions = Question::where(function ($query) use ($search_terms) {
+            foreach ($search_terms as $term) {
+                $query->orWhereRaw('LOWER(title) LIKE ?', '%' . strtolower($term) . '%');
+            }
+        })->get();
+        
+        
+        return view('pages.search', ['questions' => $questions]);
+    }
 }

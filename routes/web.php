@@ -24,6 +24,7 @@ Route::redirect('/', '/login');
 
 
 Route::get('/home', [HomeController::class, 'show'])->name('home');
+Route::get('/home/search', [HomeController::class, 'search'])->name('search');
 
 // Question
 Route::group(['middleware' => 'auth','prefix' => 'question'], function () {
