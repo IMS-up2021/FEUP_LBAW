@@ -58,6 +58,7 @@ class QuestionController extends Controller
             'user_id' => Auth::id(),
             'tag_id' =>  $request->tag_id, 
             'content' => $request->content,
+            'date' => $request->date,
         ]);
         $questionOrAnswer = QuestionOrAnswer::create([
             'question_answer_id' => $publication->id,
@@ -70,11 +71,14 @@ class QuestionController extends Controller
         ]);
 
         //Return the question
-        if($answer) {
-            return redirect('/question/'.$request->question_id.'');
-        }
-        else{ 
-            return redirect('/home?error=1');
+        if ($answer) {
+            return response()->json([
+                'content' => $request->content,
+                'user' => Auth::user(), 
+                'date' => $request->date
+            ]);
+        } else {
+            return response()->json(['error' => 'Failed to create answer'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
     }

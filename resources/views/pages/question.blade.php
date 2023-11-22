@@ -1,5 +1,37 @@
 @extends('layouts.app')
 
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+    var answerForm = document.getElementById('answerForm');
+
+    answerForm.addEventListener('submit', function (e) {
+        e.preventDefault(); 
+
+        var formData = new FormData(answerForm);
+
+        // Make an AJAX request
+        fetch('{{ route("createAnswer", ["id" => $question->question_id]) }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+
+            var answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML += '<div><li>' + data.content + '</li><p>Answered by: ' + data.user.username + '</p><p>Date: ' + data.date + '</p></div>';
+
+            answerForm.reset();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+});
+</script>
 @section('content')
 
 @php
@@ -18,7 +50,7 @@
 
 <hr>
 
-<div>
+<div id="answersContainer">
     <h2>Answers</h2>
     @foreach ($answers as $answer)
         @php
@@ -36,16 +68,17 @@
 
 <div>
     <h2>Your Answer</h2>
-    <form method="POST" action="/question/{{$question->question_id}}">
-    @csrf
-    <input type="hidden" name="question_id" value="{{ $question->question_id }}">
-    <input type="hidden" name="tag_id" value="{{ $question->questionOrAnswer->publication->tag_id }}">
+    <form id="answerForm" method="POST">
+        @csrf
+        <input type="hidden" name="question_id" value="{{ $question->question_id }}">
+        <input type="hidden" name="tag_id" value="{{ $question->questionOrAnswer->publication->tag_id }}">
+        <input type="hidden" name="date" value="{{ now() }}">
 
-    <label for="content">Your Answer:</label>
-    <textarea id="content" name="content" required>{{ old('content') }}</textarea>
+        <label for="content">Your Answer:</label>
+        <textarea id="content" name="content" required>{{ old('content') }}</textarea>
 
-    <button type="submit">Submit Answer</button>
-</form>
+        <button type="submit">Submit Answer</button>
+    </form>
 </div>
 
 @endsection
