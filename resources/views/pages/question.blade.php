@@ -46,6 +46,13 @@
     <p>Status: {{ $question->status }}</p>
     <p>Posted on: {{ $question->questionOrAnswer->publication->date->format('Y-m-d H:i:s') }}</p>
     <p>Created by: {{ $user_question->username }}</p>
+    @if(Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id())
+    <form method="POST">
+        @csrf
+        @method('DELETE')
+        <button type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete Question</button>
+    </form>
+    @endif
 </div>
 
 <hr>
