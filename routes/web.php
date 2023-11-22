@@ -38,6 +38,10 @@ Route::group(['middleware' => 'auth','prefix' => 'question'], function () {
     Route::post('/{id}/answer', [QuestionController::class, 'createAnswer'])->name('createAnswer');
     Route::delete('/{id}/answer/', [QuestionController::class, 'deleteAnswer'])->name('deleteAnswer');
 
+    //Edit Answer
+    Route::get('/{id}/answer/{answer_id}/edit', [QuestionController::class, 'showEditAnswerForm'])->name('showEditAnswerForm');
+    Route::put('/{id}/answer/{answer_id}/edit', [QuestionController::class, 'updateAnswer'])->name('updateAnswer');
+
     //Show Question
     Route::get('/{id}',[QuestionController::class, 'show']);
 
