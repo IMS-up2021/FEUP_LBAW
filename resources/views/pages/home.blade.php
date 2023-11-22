@@ -4,6 +4,12 @@
 
 <a class="button" href="{{ url('/question') }}"> Create Question </a>
 
+<form method="GET" action="{{ route('search') }}">
+    <label for="search">Search Questions:</label>
+    <input type="text" id="search" name="search" placeholder="Search a question">
+    <button type="submit">Search</button>
+</form>
+
 <h2>Top Questions</h2>
 <table class="top_questions">
     <thead>
