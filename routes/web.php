@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth','prefix' => 'question'], function () {
     Route::get('/',[QuestionController::class, 'showCreateForm']);
     Route::post('/{id}', [QuestionController::class, 'createAnswer'])->name('createAnswer');
     Route::get('/{id}',[QuestionController::class, 'show']);
+    Route::delete('/{id}', [QuestionController::class, 'deleteQuestion'])->name('deleteQuestion');
 
 });
 

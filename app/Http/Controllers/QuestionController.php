@@ -100,4 +100,21 @@ class QuestionController extends Controller
             'answers' => $answers,
         ]);
     }
+
+    public function deleteQuestion($id)
+    {
+        $question = Question::find($id);
+
+        if (!$question) {
+            return redirect('/home?error=1'); 
+        }
+
+        if ($question->questionOrAnswer->publication->user_id !== Auth::id()) {
+            return redirect('/home?error=2'); 
+        }
+
+        $question->delete();
+
+        return redirect('/home?success=1');
+    }
 }
