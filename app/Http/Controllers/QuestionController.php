@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tag;
 use App\Models\Answer;
+use App\Models\Comment;
 use App\Models\Question;
 use App\Models\Publication;
 use Illuminate\Http\Request;
@@ -60,6 +61,7 @@ class QuestionController extends Controller
             'content' => $request->content,
             'date' => $request->date,
         ]);
+        
         $questionOrAnswer = QuestionOrAnswer::create([
             'question_answer_id' => $publication->id,
         ]);

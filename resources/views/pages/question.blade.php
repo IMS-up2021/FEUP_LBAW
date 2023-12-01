@@ -113,13 +113,14 @@
         <input type="hidden" name="id" value="{{ $question->question_id }}">
         <button type="submit">Edit Question</button>
     </form>   
-
+    
     <form method="POST">
         @csrf
         @method('DELETE')
         <button type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete Question</button>
     </form>
     @endif
+    <a class='button' href='/question/{{$question->question_id}}/comments'>View Question Comments</a>
 </div>
 
 <hr>
@@ -147,15 +148,15 @@
             <button type="submit">Edit Answer</button>
         </form>   
         @endif
-        
-    @endforeach
+
+        @endforeach
 </div>
 
 <hr>
 
 <div>
     <h2>Your Answer</h2>
-    <form id="answerForm" method="POST">
+    <form id="commentForm" method="POST">
         @csrf
         <input type="hidden" name="question_id" value="{{ $question->question_id }}">
         <input type="hidden" name="tag_id" value="{{ $question->questionOrAnswer->publication->tag_id }}">

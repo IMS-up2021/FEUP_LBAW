@@ -272,7 +272,8 @@ INSERT INTO publication (id,user_id, tag_id, content, date) VALUES
   (1006, 2, 2, 'Advanced programming techniques.', CURRENT_TIMESTAMP),
   (1007, 2, 3, 'A journey to unexplored destinations.', CURRENT_TIMESTAMP),
   (1008, 2, 4, 'Cooking experiences from around the world.', CURRENT_TIMESTAMP),
-  (1009, 2, 5, 'The intersection of music and culture.', CURRENT_TIMESTAMP);
+  (1009, 2, 5, 'The intersection of music and culture.', CURRENT_TIMESTAMP),
+  (1010, 2, 5, 'Comentário Teste', CURRENT_TIMESTAMP);
 
 -- Questions and Answers
 INSERT INTO question_or_answer (question_answer_id, score) VALUES
@@ -301,3 +302,7 @@ INSERT INTO answer (answer_id, question_id) VALUES
   (1007, 1002),
   (1008, 1003),
   (1009, 1004);
+
+-- Comments
+INSERT INTO comment (comment_id, question_answer_id) VALUES
+  (1010,1004)

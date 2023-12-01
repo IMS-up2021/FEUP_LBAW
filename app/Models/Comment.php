@@ -16,17 +16,19 @@ class Comment extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'questionAnswer_id'
+        'comment_id',
+        'question_answer_id',
+
     ];
 
     public function publication()
     {
-        return $this->belongsTo(Publication::class);
+        return $this->belongsTo(Publication::class, 'comment_id','id');
     }
 
     public function questionOrAnswer()
     {
-        return $this->belongsTo(QuestionOrAnswer::class);
+        return $this->belongsTo(QuestionOrAnswer::class, 'question_answer_id', 'question_answer_id');
     }
 
 
