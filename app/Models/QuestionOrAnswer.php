@@ -25,4 +25,9 @@ class QuestionOrAnswer extends Model
         return $this->belongsTo(Publication::class,'question_answer_id','id');
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class,'question_answer_id','question_answer_id');
+    }
+
 }
