@@ -39,6 +39,35 @@
     </tbody>
 </table>
 
+<h2>Recent Questions</h2>
+<table class = "recent_questions">
+    <thead>
+        <tr>
+            <th>Author</th>
+            <th colspan = "4">Question</th>
+            <th>Status</th>
+            <th>Score</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($recentQuestions as $recentQuestion)
+            <tr>
+                @php
+                    $user_question = \App\Models\User::find($recentQuestion->questionOrAnswer->publication->user_id);
+                @endphp
+                <th>{{ $user_question->username }}</th>
+                <td colspan = "4">
+                    <a class = 'button' href = '/question/{{$recentQuestion->question_id}}'>{{ $recentQuestion->title }}</a>
+                </td>
+                <th>{{ $recentQuestion->status }}</th>
+                <th>{{ $recentQuestion->questionOrAnswer->score }}</th>
+                <th>{{ $recentQuestion->questionOrAnswer->publication->date->format('Y-m-d H:i:s') }}</th>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
 <h2>Questions</h2>
 <table class = "questions">
     <thead>
