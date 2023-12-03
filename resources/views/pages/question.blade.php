@@ -148,7 +148,7 @@
             <button type="submit">Edit Answer</button>
         </form>   
         @endif
-
+        <a class='button' href='/question/{{$question->question_id}}/answer/{{$answer->answer_id}}/comments'>View Comments</a>
         @endforeach
 </div>
 
@@ -156,7 +156,7 @@
 
 <div>
     <h2>Your Answer</h2>
-    <form id="commentForm" method="POST">
+    <form id="answerForm" method="POST">
         @csrf
         <input type="hidden" name="question_id" value="{{ $question->question_id }}">
         <input type="hidden" name="tag_id" value="{{ $question->questionOrAnswer->publication->tag_id }}">
