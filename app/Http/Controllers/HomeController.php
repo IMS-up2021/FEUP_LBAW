@@ -26,9 +26,18 @@ class HomeController extends Controller
         ->orderBy('question_or_answer.score', 'desc')
         ->take(3)
         ->get();
+        
+        //já não dá erro ao carregar a página
+        $recentQuestions = Question::select('question.*')
+        ->join('question_or_answer', 'question.question_id', '=', 'question_or_answer.question_answer_id')
+        ->join('publication', 'question_or_answer.question_answer_id', '=', 'publication.id')
+        ->orderBy('publication.date', 'desc')
+        ->take(5)
+        ->get();
     
 
         return view('pages.home', [
+            'recentQuestions' => $recentQuestions,
             'questions' => $questions,  
             'top_questions' => $top_questions
         ]);
