@@ -62,7 +62,6 @@ Route::group(['middleware' => 'auth','prefix' => 'question'], function () {
 Route::group(['middleware' => 'auth','prefix' => 'user'], function () {
     Route::get('/{id}',[UserController::class, 'show']);
 });
-Route::get('/{id}', [UserController::class, 'showProfile']);
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {

@@ -24,19 +24,4 @@ class UserController extends Controller
         return view('pages.user', ['user' => $user, 'questions' => $questions, 'answers' => $answers]);
     }
 
-    
-    public function showProfile($id) {
-        $user = User::find($id);
-        $questions = Question::whereHas('questionOrAnswer', function ($query) use ($id) {
-            $query->whereHas('publication', function ($query) use ($id) {
-                $query->where('user_id', $id);
-            });
-        })->get();
-        $answers = Answer::whereHas('questionOrAnswer', function ($query) use ($id) {
-            $query->whereHas('publication', function ($query) use ($id) {
-                $query->where('user_id', $id);
-            });
-        })->get();
-        return view('pages.user', ['user' => $user, 'questions' => $questions, 'answers' => $answers]);
-    }
 }
