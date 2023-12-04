@@ -58,9 +58,15 @@ Route::group(['middleware' => 'auth','prefix' => 'question'], function () {
     Route::post('/{id}/comments', [CommentController::class, 'createQuestionComment'])->name('createQuestionComment');
     Route::delete('/{id}/comments', [CommentController::class, 'deleteQuestionComment'])->name('deleteQuestionComment');
 
+    Route::get('/{id}/comments/{comment_id}/edit', [CommentController::class, 'showQuestionCommentForm'])->name('showQuestionCommentForm');
+    Route::put('/{id}/comments/{comment_id}/edit', [CommentController::class, 'updateQuestionComment'])->name('updateQuestionComment');
+
     Route::get('/{id}/answer/{answer_id}/comments', [CommentController::class, 'showAnswerComments'])->name('showAnswerComments');
     Route::post('/{id}/answer/{answer_id}/comments', [CommentController::class, 'createAnswerComment'])->name('createAnswerComment');
     Route::delete('/{id}/answer/{answer_id}/comments', [CommentController::class, 'deleteAnswerComment'])->name('deleteAnswerComment');
+
+    Route::get('/{id}/answer/{answer_id}/comments/{comment_id}/edit', [CommentController::class, 'showAnswerCommentForm'])->name('showAnswerCommentForm');
+    Route::put('/{id}/answer/{answer_id}/comments/{comment_id}/edit', [CommentController::class, 'updateAnswerComment'])->name('updateAnswerComment');
 });
 
 //User
