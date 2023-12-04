@@ -13,6 +13,9 @@
             <p>Commented by: {{ $user_comment->username }}</p>
         </div>
         @if(Auth::check() && $user_comment->id === Auth::id())
+        <form method="GET" action="{{ route('showQuestionCommentForm', ['id' => $question->question_id, 'comment_id' => $comment->comment_id]) }}">
+            <button type="submit">Edit Comment</button>
+        </form>   
         <form action="{{ route('deleteQuestionComment',['id' => $question->question_id]) }}" method="POST">
             @csrf
             @method('DELETE')

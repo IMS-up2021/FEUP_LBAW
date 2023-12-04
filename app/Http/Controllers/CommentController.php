@@ -37,6 +37,28 @@ class CommentController extends Controller
         ]);
     }
 
+    public function showAnswerCommentForm($id, $answer_id, $comment_id)
+    {
+        $answer = Answer::findOrFail($answer_id);
+        $question = Question::findOrFail($id);
+        $comment = Comment::findOrFail($comment_id);
+        return view('pages.editAnswerComment', [
+            'question' => $question,
+            'answer' => $answer,
+            'comment' => $comment,
+        ]);
+    }
+
+    public function showQuestionCommentForm($id, $comment_id)
+    {
+        $question = Question::findOrFail($id);
+        $comment = Comment::findOrFail($comment_id);
+        return view('pages.editQuestionComment', [
+            'question' => $question,
+            'comment' => $comment,
+        ]);
+    }
+
     public function createQuestionComment(Request $request){
         //Validate the request
         $request->validate([
@@ -135,6 +157,51 @@ class CommentController extends Controller
         }
         else{
             return redirect('/question/'.$request->question_id.'/answer/'.$request->answer_id.'/comments?error=1');
+        }
+    }
+
+    public function updateAnswerComment(Request $request){
+        //Validate the request
+        $request->validate([
+            'content' => 'required|max:1000',
+            'question_id' => 'required|exists:question,question_id',
+            'answer_id' => 'required|exists:answer,answer_id',
+            'comment_id' => 'required|exists:comment,comment_id',
+        ]);
+
+        $comment = Comment::findOrFail($request->comment_id);
+        $publication_id = $comment->comment_id;
+        $publication = Publication::findOrFail($publication_id);
+
+        if($publication->user_id === Auth::id()){
+            $publication->content = $request->content;
+            $publication->save();
+            return redirect('/question/'.$request->question_id.'/answer/'.$request->answer_id.'/comments?error=0');
+        }
+        else{
+            return redirect('/question/'.$request->question_id.'/answer/'.$request->answer_id.'/comments?error=1');
+        }
+    }
+
+    public function updateQuestionComment(Request $request){
+        //Validate the request
+        $request->validate([
+            'content' => 'required|max:1000',
+            'question_id' => 'required|exists:question,question_id',
+            'comment_id' => 'required|exists:comment,comment_id',
+        ]);
+
+        $comment = Comment::findOrFail($request->comment_id);
+        $publication_id = $comment->comment_id;
+        $publication = Publication::findOrFail($publication_id);
+
+        if($publication->user_id === Auth::id()){
+            $publication->content = $request->content;
+            $publication->save();
+            return redirect('/question/'.$request->question_id.'/comments?error=0');
+        }
+        else{
+            return redirect('/question/'.$request->question_id.'/comments?error=1');
         }
     }
 }
