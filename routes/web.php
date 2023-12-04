@@ -56,8 +56,11 @@ Route::group(['middleware' => 'auth','prefix' => 'question'], function () {
     //Comments
     Route::get('/{id}/comments', [CommentController::class, 'showComments'])->name('showComments');
     Route::post('/{id}/comments', [CommentController::class, 'createQuestionComment'])->name('createQuestionComment');
+    Route::delete('/{id}/comments', [CommentController::class, 'deleteQuestionComment'])->name('deleteQuestionComment');
+
     Route::get('/{id}/answer/{answer_id}/comments', [CommentController::class, 'showAnswerComments'])->name('showAnswerComments');
     Route::post('/{id}/answer/{answer_id}/comments', [CommentController::class, 'createAnswerComment'])->name('createAnswerComment');
+    Route::delete('/{id}/answer/{answer_id}/comments', [CommentController::class, 'deleteAnswerComment'])->name('deleteAnswerComment');
 });
 
 //User
