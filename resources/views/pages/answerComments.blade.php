@@ -11,7 +11,19 @@
             <p>{{ $comment->publication->content }}</p>
             <p>Commented on: {{ $comment->publication->date->format('Y-m-d H:i:s') }}</p>
             <p>Commented by: {{ $user_comment->username }}</p>
-            <hr>
+        </div>
+        @if(Auth::check() && $user_comment->id === Auth::id())
+        <form action="{{ route('deleteAnswerComment', ['id' => $question->question_id, 'answer_id' => $answer->answer_id, 'comment_id' => $comment->comment_id]) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <input type="hidden" name="comment_id" value="{{ $comment->comment_id }}">
+            <input type="hidden" name="question_id" value="{{ $question->question_id }}">
+            <input type="hidden" name="answer_id" value="{{ $answer->answer_id }}">
+            <button type="submit">Delete Comment Answer</button>
+        </form>
+
+        @endif
+        <hr>
     @endforeach
 
     <div>

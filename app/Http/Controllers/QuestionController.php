@@ -173,12 +173,12 @@ class QuestionController extends Controller
     $answer = Answer::findOrFail($request->answer_id);
 
     $question = Question::findOrFail($id);
-
-    if (Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id()) {
+    
+    if (Auth::check() && $answer->questionOrAnswer->publication->user_id === Auth::id()) {
         $answer->delete();
-        return redirect('question/'. $question->question_id); 
+        return redirect('question/'. $question->question_id . '?error=0'); 
     } else {
-        return redirect('question/' . $question->$question_id . '?error=6'); // Unauthorized access
+        return redirect('question/' . $question->question_id . '?error=6'); // Unauthorized access
     }
 }
 
@@ -192,7 +192,7 @@ public function updateAnswer(Request $request, $question_id, $answer_id)
     $request->validate([
         'content' => 'required|max:1000',
     ]);
-    if (Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id()) {
+    if (Auth::check() && $answer->questionOrAnswer->publication->user_id === Auth::id()) {
 
         $answer->questionOrAnswer->publication->update([
         'content' => $request->content,
@@ -200,7 +200,7 @@ public function updateAnswer(Request $request, $question_id, $answer_id)
 
         return redirect('question/'. $question->question_id); 
     } else {
-        return redirect('question/' . $question->$question_id . '?error=6'); 
+        return redirect('question/' . $question->question_id . '?error=6'); 
     }
 }
 

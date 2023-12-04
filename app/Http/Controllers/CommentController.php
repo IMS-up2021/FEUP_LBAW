@@ -28,8 +28,10 @@ class CommentController extends Controller
         $answer = Answer::findOrFail($answer_id);
         $questionOrAnswer_id = $answer->questionOrAnswer->question_answer_id;
         $comments = Comment::where('question_answer_id', $questionOrAnswer_id)->get();
-    
+        $question = Question::findOrFail($id);
+
         return view('pages.answerComments', [
+            'question' => $question,
             'answer' => $answer,
             'comments' => $comments,
         ]);
@@ -95,4 +97,44 @@ class CommentController extends Controller
 
     }
 
+    public function deleteQuestionComment(Request $request){
+        //Validate the request
+        $request->validate([
+            'comment_id' => 'required|exists:comment,comment_id',
+            'question_id' => 'required|exists:question,question_id',
+        ]);
+
+        $comment = Comment::findOrFail($request->comment_id);
+        $publication_id = $comment->comment_id;
+        $publication = Publication::findOrFail($publication_id);
+
+        if($publication->user_id === Auth::id()){
+            $comment->delete();
+            $publication->delete();
+            return redirect('/question/'.$request->question_id.'/comments?error=0');
+        }
+        else{
+            return redirect('/question/'.$request->question_id.'/comments?error=1');
+        }
+    }
+
+    public function deleteAnswerComment(Request $request){
+        //Validate the request
+        $request->validate([
+            'comment_id' => 'required|exists:comment,comment_id',
+            'question_id' => 'required|exists:question,question_id',
+            'answer_id' => 'required|exists:answer,answer_id',
+        ]);
+        $comment = Comment::findOrFail($request->comment_id);
+        $publication_id = $comment->comment_id;
+        $publication = Publication::findOrFail($publication_id);
+        if($publication->user_id === Auth::id()){
+            $comment->delete();
+            $publication->delete();
+            return redirect('/question/'.$request->question_id.'/answer/'.$request->answer_id.'/comments?error=0');
+        }
+        else{
+            return redirect('/question/'.$request->question_id.'/answer/'.$request->answer_id.'/comments?error=1');
+        }
+    }
 }
