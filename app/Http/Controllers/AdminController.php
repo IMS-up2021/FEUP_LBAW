@@ -12,46 +12,55 @@ class AdminController extends Controller
 {
     public function showAdministration()
     {
+        $this->authorize('showAdministration', User::class);
+
         return view('pages.administration');
     }
 
     public function showCreateTag()
     {
+        $this->authorize('showAdministration', User::class);
+
         $tags = Tag::all();
         return view('pages.createTag', ['tags' => $tags]);
     }
     public function showEditTag()
     {
+        $this->authorize('showAdministration', User::class);
+
         $tags = Tag::all();
         return view('pages.editTag', ['tags' => $tags]);
     }
     public function showEditTagForm($id)
     {
+        $this->authorize('showAdministration', User::class);
+
         $tag = Tag::find($id);
         return view('pages.editTagForm', ['tag' => $tag]);
     }
 
     public function showDeleteTag()
     {
+        $this->authorize('showAdministration', User::class);
+
         $tags = Tag::all();
         return view('pages.deleteTag', ['tags' => $tags]);
     }
     
     public function editTag(Request $request, $id)
     {
-        //Validate the request
+
+        $this->authorize('showAdministration', User::class);
+
         $request->validate([
             'tag_name' => 'required|max:255',
         ]);
 
-        //Find the tag
         $tag = Tag::find($id);
 
-        //Update the tag
         $tag->tag_name = $request->tag_name;
         $tag->save();
 
-        //Return the tag
         if($tag) {
             return redirect('administration/edit-tag?error=0');
         }
@@ -61,17 +70,16 @@ class AdminController extends Controller
     }
     public function createTag(Request $request)
     {
-        //Validate the request
+        $this->authorize('showAdministration', User::class);
+
         $request->validate([
             'tag_name' => 'required|max:255',
         ]);
 
-        //Create the tag
         $tag = Tag::create([
             'tag_name' => $request->tag_name,
         ]);
 
-        //Return the tag
         if($tag) {
             return redirect('/administration?error=0');
         }
@@ -82,18 +90,17 @@ class AdminController extends Controller
 
     public function deleteTag(Request $request)
     {
-        //Validate the request
+
+        $this->authorize('showAdministration', User::class);
+
         $request->validate([
             'id' => 'required',
         ]);
 
-        //Find the tag
         $tag = Tag::find($request->id);
 
-        //Delete the tag
         $tag->delete();
 
-        //Return the tag
         if($tag) {
             return redirect('/administration?error=0');
         }
@@ -104,11 +111,14 @@ class AdminController extends Controller
 
     public function showCreateUser()
     {
+        $this->authorize('showAdministration', User::class);
+
         return view('pages.createUser');
     }
     public function createUser(Request $request)
     {
-        //Validate the request
+        $this->authorize('showAdministration', User::class);
+
         $validatedData = $request->validate([
             'username' => 'required|max:255',
             'email' => 'required|email|max:250|unique:users',
@@ -117,7 +127,6 @@ class AdminController extends Controller
             'description' => 'required|max:255',
         ]);
 
-        //Create the user
         $user = User::create([
             'username' => $request->username,
             'email' => $request->email,
@@ -144,17 +153,23 @@ class AdminController extends Controller
 
     public function showEditUser()
     {
+        $this->authorize('showAdministration', User::class);
+
         $users = User::all();
         return view('pages.editUser', ['users' => $users]);
     }
     public function showEditUserForm($id)
     {
+        $this->authorize('showAdministration', User::class);
+
         $user = User::find($id);
         return view('pages.editUserForm', ['user' => $user]);
     }
 
     public function editUser(Request $request, $id)
     {
+        $this->authorize('showAdministration', User::class);
+
         $validatedData = $request->validate([
             'username' => 'required|max:255',
             'email' => 'required|email|max:250',
@@ -202,24 +217,24 @@ class AdminController extends Controller
 
     public function showDeleteUser()
     {
+        $this->authorize('showAdministration', User::class);
+
         $users = User::all();
         return view('pages.deleteUser', ['users' => $users]);
     }
 
     public function deleteUser(Request $request)
     {
-        //Validate the request
+        $this->authorize('showAdministration', User::class);
+
         $request->validate([
             'id' => 'required',
         ]);
 
-        //Find the user
         $user = User::find($request->id);
 
-        //Delete the user
         $user->delete();
 
-        //Return the user
         if($user) {
             return redirect('/administration?error=0');
         }
@@ -230,21 +245,22 @@ class AdminController extends Controller
 
     public function showSearchUser()
     {
+        $this->authorize('showAdministration', User::class);
+
         $users = User::all();
         return view('pages.searchUser', ['users' => $users]);
     }
 
     public function searchUser(Request $request)
     {
-        //Validate the request
+        $this->authorize('showAdministration', User::class);
+
         $request->validate([
             'search' => 'required|max:255',
         ]);
 
-        //Find the user
         $users = User::where('username', 'ILIKE', '%' . $request->search . '%')->get();
 
-        //Return the user
         if($users) {
             return view('pages.searchUserResult', ['users' => $users]);
         }
@@ -255,25 +271,25 @@ class AdminController extends Controller
 
     public function showBlockUser()
     {
+        $this->authorize('showAdministration', User::class);
+
         $users = User::all();
         return view('pages.blockUser', ['users' => $users]);
     }
 
     public function blockUser(Request $request, $id)
     {
-        //Validate the request
+        $this->authorize('showAdministration', User::class);
+
         $request->validate([
             'blocked' => 'required|in:0,1',
         ]);
 
-        //Find the user
         $user = User::find($id);
 
-        //Block the user
         $user->blocked = $request->blocked;
         $user->save();
 
-        //Return the user
         if($user) {
             return redirect('administration/block-user?error=0');
         }
