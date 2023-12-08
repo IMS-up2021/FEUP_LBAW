@@ -19,7 +19,7 @@
     <a class="button" href="/administration/edit-user">Edit an existing user</a>
     <a class="button" href="/administration/delete-user">Delete an existing user</a>
     <a class="button" href="/administration/search-user">Search for a user</a>
-    <a class="button" href="/administration/restore-user">Block a user</a>
+    <a class="button" href="/administration/block-user">Block/Unblock a user</a>
 </div>
 
 @endsection

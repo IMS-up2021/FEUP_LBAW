@@ -63,6 +63,10 @@ Route::group(['middleware' => 'auth','prefix' => 'administration'], function () 
     //Search User
     Route::get('/search-user',[AdminController::class, 'showSearchUser']);
     Route::get('/search-user/search',[AdminController::class, 'searchUser'])->name('searchUser');
+
+    //Block User
+    Route::get('/block-user',[AdminController::class, 'showBlockUser']);
+    Route::put('/block-user/{id}',[AdminController::class, 'blockUser'])->name('blockUser');
     
 });
 

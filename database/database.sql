@@ -39,6 +39,7 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     description TEXT,
+    blocked BOOLEAN DEFAULT FALSE,
     remember_token VARCHAR,
     profile_picture BYTEA
 );

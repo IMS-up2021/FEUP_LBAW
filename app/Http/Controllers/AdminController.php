@@ -252,4 +252,33 @@ class AdminController extends Controller
             return redirect('/administration/search-user?error=1');
         }
     }
+
+    public function showBlockUser()
+    {
+        $users = User::all();
+        return view('pages.blockUser', ['users' => $users]);
+    }
+
+    public function blockUser(Request $request, $id)
+    {
+        //Validate the request
+        $request->validate([
+            'blocked' => 'required|in:0,1',
+        ]);
+
+        //Find the user
+        $user = User::find($id);
+
+        //Block the user
+        $user->blocked = $request->blocked;
+        $user->save();
+
+        //Return the user
+        if($user) {
+            return redirect('administration/block-user?error=0');
+        }
+        else{ 
+            return redirect('administration/block-user?error=1');
+        }
+    }
 }
