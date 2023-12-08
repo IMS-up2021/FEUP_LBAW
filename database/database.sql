@@ -60,7 +60,7 @@ CREATE TABLE tag (
 
 CREATE TABLE publication (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
     tag_id INTEGER REFERENCES tag(id) ON DELETE SET NULL,
     content TEXT NOT NULL,
     date TODAY

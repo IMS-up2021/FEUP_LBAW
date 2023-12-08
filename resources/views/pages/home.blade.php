@@ -27,7 +27,13 @@
                 @php
                     $user_question = \App\Models\User::find($top_question->questionOrAnswer->publication->user_id);
                 @endphp
-                <th><a class = 'button' href="{{ url('/user/' . $user_question->id) }}">{{ $user_question->username }}</a></th>
+                <th>
+                @if ($user_question)
+                    <a class='button' href="{{ url('/user/' . $user_question->id) }}">{{ $user_question->username }}</a>
+                @else
+                    Deleted User
+                @endif
+                </th>
                 <th colspan = "4">
                     <a class='button' href='/question/{{$top_question->question_id}}'>{{ $top_question->title }}</a>
                 </th>
@@ -56,7 +62,13 @@
                 @php
                     $user_question = \App\Models\User::find($recentQuestion->questionOrAnswer->publication->user_id);
                 @endphp
-                <th><a class = 'button' href="{{ url('/user/' . $user_question->id) }}">{{ $user_question->username }}</a></th>
+                <th>
+                @if ($user_question)
+                    <a class='button' href="{{ url('/user/' . $user_question->id) }}">{{ $user_question->username }}</a>
+                @else
+                    Deleted User
+                @endif
+                </th>
                 <td colspan = "4">
                     <a class = 'button' href = '/question/{{$recentQuestion->question_id}}'>{{ $recentQuestion->title }}</a>
                 </td>
@@ -85,7 +97,13 @@
                 @php
                     $user_question = \App\Models\User::find($question->questionOrAnswer->publication->user_id);
                 @endphp
-                <th><a class = 'button' href="{{ url('/user/' . $user_question->id) }}">{{ $user_question->username }}</a></th>
+                <th>
+                @if ($user_question)
+                    <a class='button' href="{{ url('/user/' . $user_question->id) }}">{{ $user_question->username }}</a>
+                @else
+                    Deleted User
+                @endif
+                </th>
                 <th colspan = "4">
                     <a class='button' href='/question/{{$question->question_id}}'>{{ $question->title }}</a> 
                 </th>

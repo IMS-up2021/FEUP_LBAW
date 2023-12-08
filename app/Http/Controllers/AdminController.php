@@ -199,4 +199,32 @@ class AdminController extends Controller
             return redirect('administration/edit-user?error=1');
         }
     }
+
+    public function showDeleteUser()
+    {
+        $users = User::all();
+        return view('pages.deleteUser', ['users' => $users]);
+    }
+
+    public function deleteUser(Request $request)
+    {
+        //Validate the request
+        $request->validate([
+            'id' => 'required',
+        ]);
+
+        //Find the user
+        $user = User::find($request->id);
+
+        //Delete the user
+        $user->delete();
+
+        //Return the user
+        if($user) {
+            return redirect('/administration?error=0');
+        }
+        else{ 
+            return redirect('/administration?error=1');
+        }
+    }
 }

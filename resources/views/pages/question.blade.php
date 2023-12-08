@@ -106,7 +106,7 @@
     <p>Score: {{ $question->questionOrAnswer->score }}</p>
     <p>Status: {{ $question->status }}</p>
     <p>Posted on: {{ $question->questionOrAnswer->publication->date->format('Y-m-d H:i:s') }}</p>
-    <p>Created by: {{ $user_question->username }}</p>
+    <p>Created by : {{ optional($user_question)->username ?? 'Deleted User' }}</p>
     
     @if(Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id())
     <form method="GET" action="{{ url('/question/' . $question->question_id . '/edit') }}">
@@ -133,7 +133,7 @@
         @endphp
         <div>
             <li>{{ $answer->questionOrAnswer->publication->content}}</li>   
-            <p>Answered by: {{ $user_answer->username }}</p>
+            <p>Answered by: {{ optional($user_answer)->username ?? 'Deleted User' }}</p>
             <p>Date: {{ $answer->questionOrAnswer->publication->date->format('Y-m-d H:i:s') }}</p>        
         </div>
         @if(Auth::check() && $answer->questionOrAnswer->publication->user_id === Auth::id())

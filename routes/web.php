@@ -56,6 +56,10 @@ Route::group(['middleware' => 'auth','prefix' => 'administration'], function () 
     Route::get('/edit-user/{id}',[AdminController::class, 'showEditUserForm'])->name('showEditUserForm');
     Route::put('/edit-user/{id}',[AdminController::class, 'editUser'])->name('editUser');
     
+    //Delete User
+    Route::get('/delete-user',[AdminController::class, 'showDeleteUser']);
+    Route::delete('/delete-user',[AdminController::class, 'deleteUser'])->name('deleteUser');
+    
 });
 
 // Question

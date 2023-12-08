@@ -10,9 +10,9 @@
         <div>
             <p>{{ $comment->publication->content }}</p>
             <p>Commented on: {{ $comment->publication->date->format('Y-m-d H:i:s') }}</p>
-            <p>Commented by: {{ $user_comment->username }}</p>
+            <p>Commented by: {{ $user_comment ? $user_comment->username : 'Deleted User' }}</p>
         </div>
-        @if(Auth::check() && $user_comment->id === Auth::id())
+        @if(Auth::check() && $user_comment && $user_comment->id === Auth::id())
         <form method="GET" action="{{ route('showAnswerCommentForm', ['id' => $question->question_id, 'answer_id' => $answer->answer_id, 'comment_id' => $comment->comment_id]) }}">
             <button type="submit">Edit Comment</button>
         </form>   
