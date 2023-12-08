@@ -19,7 +19,7 @@ class Question extends Model
         'title',
         'status',
     ];
-
+ 
     public function questionOrAnswer()
     {
         return $this->belongsTo(QuestionOrAnswer::class, 'question_id', 'question_answer_id');

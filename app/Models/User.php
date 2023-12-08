@@ -27,6 +27,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'description',
     ];
 
     /**
@@ -49,6 +50,23 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function admin()
+    {
+        return $this->hasOne(Admin::class, 'admin_id', 'id');
+    }
 
+    public function isAdmin()
+    {
+        return $this->admin()->exists();
+    }
+    
+    public function moderator()
+    {
+        return $this->hasOne(Moderator::class, 'moderator_id', 'id');
+    }
 
+    public function isModerator()
+    {
+        return $this->moderator()->exists();
+    }
 }

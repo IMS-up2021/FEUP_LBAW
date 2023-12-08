@@ -25,10 +25,15 @@
             <header>
                 <h1><a href="{{ url('/home') }}">BrainShare</a></h1>
                 @if (Auth::check())
+                    <div>
+                    @if (Auth::user()->isAdmin())
+                        <a href="{{ url('/administration') }}">Administration</a>
+                    @endif
                     <a class="button" href="{{ url('/logout') }}"> Logout </a> 
                     <span>
                         <a href="{{ url('/user/' . Auth::user()->id) }}">{{ Auth::user()->username }}</a>
                     </span>
+                   </div>
                 @endif
             </header>
             <section id="content">

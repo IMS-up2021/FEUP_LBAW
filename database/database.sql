@@ -61,7 +61,7 @@ CREATE TABLE tag (
 CREATE TABLE publication (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    tag_id INTEGER NOT NULL REFERENCES tag(id) ON DELETE CASCADE,
+    tag_id INTEGER REFERENCES tag(id) ON DELETE SET NULL,
     content TEXT NOT NULL,
     date TODAY
 );
@@ -179,6 +179,7 @@ CREATE INDEX question_title_idx ON question USING GIN (tsvectors);
 -----------------------------------------
 -- TRIGGERS 
 -----------------------------------------
+
 -- TRIGGER01 
 -- Create a trigger to update the score of a question or answer after a review
 CREATE OR REPLACE FUNCTION update_score_after_review() RETURNS TRIGGER AS $$
@@ -235,7 +236,7 @@ EXECUTE FUNCTION trigger_notifications_function();
 --------------POPULATE----------------
 
 INSERT INTO users VALUES (
-  DEFAULT,
+  1000,
   'John Doe',
   'admin@gmail.com',
   '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
@@ -243,37 +244,48 @@ INSERT INTO users VALUES (
 ); -- 
 
 INSERT INTO users VALUES (
-  DEFAULT,
+  2000,
   'Sarah Doe',
   'admin2@gmail.com',
   '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
   'Description'
 ); -- 
 
+INSERT INTO users VALUES (
+  3000,
+  'Admin',
+  'real_admin@gmail.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
+  'Description'
+); -- 
+
+INSERT INTO admin VALUES (
+  3000
+); 
 
 INSERT INTO tag (id, tag_name) VALUES
-  (1, 'Technology'),
-  (2, 'Programming'),
-  (3, 'Travel'),
-  (4, 'Food'),
-  (5, 'Music');
+  (1000, 'Technology'),
+  (1001, 'Programming'),
+  (1002, 'Travel'),
+  (1003, 'Food'),
+  (1004, 'Music');
 
 -- User 1 publications
 INSERT INTO publication (id,user_id, tag_id, content, date) VALUES
-  (1000, 1, 1, 'Exploring the latest trends in technology.', CURRENT_TIMESTAMP),
-  (1001, 1, 2, 'Coding tips for beginners.', CURRENT_TIMESTAMP),
-  (1002, 1, 3, 'My recent travel adventures.', CURRENT_TIMESTAMP),
-  (1003, 1, 4, 'Delicious food discoveries.', CURRENT_TIMESTAMP),
-  (1004, 1, 5, 'The impact of music on our lives.', CURRENT_TIMESTAMP);
+  (1000, 1000, 1000, 'Exploring the latest trends in technology.', CURRENT_TIMESTAMP),
+  (1001, 1000, 1001, 'Coding tips for beginners.', CURRENT_TIMESTAMP),
+  (1002, 1000, 1002, 'My recent travel adventures.', CURRENT_TIMESTAMP),
+  (1003, 1000, 1003, 'Delicious food discoveries.', CURRENT_TIMESTAMP),
+  (1004, 1000, 1004, 'The impact of music on our lives.', CURRENT_TIMESTAMP);
 
 -- User 2 publications
 INSERT INTO publication (id,user_id, tag_id, content, date) VALUES
-  (1005, 2, 1, 'Reviewing the newest tech gadgets.', CURRENT_TIMESTAMP),
-  (1006, 2, 2, 'Advanced programming techniques.', CURRENT_TIMESTAMP),
-  (1007, 2, 3, 'A journey to unexplored destinations.', CURRENT_TIMESTAMP),
-  (1008, 2, 4, 'Cooking experiences from around the world.', CURRENT_TIMESTAMP),
-  (1009, 2, 5, 'The intersection of music and culture.', CURRENT_TIMESTAMP),
-  (1010, 2, 5, 'Comentário Teste', CURRENT_TIMESTAMP);
+  (1005, 2000, 1000, 'Reviewing the newest tech gadgets.', CURRENT_TIMESTAMP),
+  (1006, 2000, 1001, 'Advanced programming techniques.', CURRENT_TIMESTAMP),
+  (1007, 2000, 1002, 'A journey to unexplored destinations.', CURRENT_TIMESTAMP),
+  (1008, 2000, 1003, 'Cooking experiences from around the world.', CURRENT_TIMESTAMP),
+  (1009, 2000, 1004, 'The intersection of music and culture.', CURRENT_TIMESTAMP),
+  (1010, 2000, 1004, 'Comentário Teste', CURRENT_TIMESTAMP);
 
 -- Questions and Answers
 INSERT INTO question_or_answer (question_answer_id, score) VALUES

@@ -9,14 +9,12 @@ class Tag extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'tag_id';
-
     protected $table = 'tag';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'tagName'
+        'tag_name'
     ];
 
     public function publications()

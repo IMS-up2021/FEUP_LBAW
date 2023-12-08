@@ -102,7 +102,7 @@
 <div>
     <h1>{{ $question->title }}</h1>
     <p>{{ $question->questionOrAnswer->publication->content }}</p>
-    <p>Tag: {{ $question->questionOrAnswer->publication->tag->tag_name }}</p>
+    <p>Tag: {{ optional($question->questionOrAnswer->publication->tag)->tag_name ?? 'Deleted Tag' }}</p>
     <p>Score: {{ $question->questionOrAnswer->score }}</p>
     <p>Status: {{ $question->status }}</p>
     <p>Posted on: {{ $question->questionOrAnswer->publication->date->format('Y-m-d H:i:s') }}</p>
