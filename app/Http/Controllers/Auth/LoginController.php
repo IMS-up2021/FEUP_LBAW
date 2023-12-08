@@ -2,13 +2,14 @@
  
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 
-use Illuminate\Http\RedirectResponse;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
-use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -34,18 +35,26 @@ class LoginController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
- 
+    
         if (Auth::attempt($credentials, $request->filled('remember'))) {
+            $user = Auth::user();
+    
+            if ($user->blocked) {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Your account is blocked. Please contact support.',
+                ])->onlyInput('email');
+            }
+    
             $request->session()->regenerate();
- 
+    
             return redirect()->intended('/home');
         }
- 
+    
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }
-
     /**
      * Log out the user from application.
      */

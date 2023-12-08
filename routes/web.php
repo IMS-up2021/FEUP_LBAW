@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\Auth\LoginController;
@@ -26,6 +27,48 @@ Route::redirect('/', '/login');
 
 Route::get('/home', [HomeController::class, 'show'])->name('home');
 Route::get('/home/search', [HomeController::class, 'search'])->name('search');
+
+
+//Admin 
+Route::group(['middleware' => 'auth','prefix' => 'administration'], function () {
+    //Show Administration Page
+    Route::get('/',[AdminController::class, 'showAdministration']);
+
+    //Create Tag
+    Route::get('/create-tag',[AdminController::class, 'showCreateTag']);
+    Route::post('/create-tag',[AdminController::class, 'createTag'])->name('createTag');
+
+    //Edit Tag
+    Route::get('/edit-tag',[AdminController::class, 'showEditTag']);
+    Route::get('/edit-tag/{id}',[AdminController::class, 'showEditTagForm'])->name('showEditTagForm');
+    Route::put('/edit-tag/{id}',[AdminController::class, 'editTag'])->name('editTag');
+
+    //Delete Tag
+    Route::get('/delete-tag',[AdminController::class, 'showDeleteTag']);
+    Route::delete('/delete-tag',[AdminController::class, 'deleteTag'])->name('deleteTag');
+
+    //Create User
+    Route::get('/create-user',[AdminController::class, 'showCreateUser']);
+    Route::post('/create-user',[AdminController::class, 'createUser'])->name('createUser');
+
+    //Edit User
+    Route::get('/edit-user',[AdminController::class, 'showEditUser']);
+    Route::get('/edit-user/{id}',[AdminController::class, 'showEditUserForm'])->name('showEditUserForm');
+    Route::put('/edit-user/{id}',[AdminController::class, 'editUser'])->name('editUser');
+    
+    //Delete User
+    Route::get('/delete-user',[AdminController::class, 'showDeleteUser']);
+    Route::delete('/delete-user',[AdminController::class, 'deleteUser'])->name('deleteUser');
+
+    //Search User
+    Route::get('/search-user',[AdminController::class, 'showSearchUser']);
+    Route::get('/search-user/search',[AdminController::class, 'searchUser'])->name('searchUser');
+
+    //Block User
+    Route::get('/block-user',[AdminController::class, 'showBlockUser']);
+    Route::put('/block-user/{id}',[AdminController::class, 'blockUser'])->name('blockUser');
+    
+});
 
 // Question
 Route::group(['middleware' => 'auth','prefix' => 'question'], function () {
