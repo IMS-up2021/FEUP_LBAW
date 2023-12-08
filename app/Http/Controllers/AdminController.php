@@ -227,4 +227,29 @@ class AdminController extends Controller
             return redirect('/administration?error=1');
         }
     }
+
+    public function showSearchUser()
+    {
+        $users = User::all();
+        return view('pages.searchUser', ['users' => $users]);
+    }
+
+    public function searchUser(Request $request)
+    {
+        //Validate the request
+        $request->validate([
+            'search' => 'required|max:255',
+        ]);
+
+        //Find the user
+        $users = User::where('username', 'ILIKE', '%' . $request->search . '%')->get();
+
+        //Return the user
+        if($users) {
+            return view('pages.searchUserResult', ['users' => $users]);
+        }
+        else{ 
+            return redirect('/administration/search-user?error=1');
+        }
+    }
 }

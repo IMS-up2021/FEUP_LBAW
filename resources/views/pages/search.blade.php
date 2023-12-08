@@ -21,7 +21,11 @@
                     @php
                         $user_question = \App\Models\User::find($question->questionOrAnswer->publication->user_id);
                     @endphp
+                    @if ($user_question)
                     <th>{{ $user_question->username }}</th>
+                    @else
+                    <th>Deleted User</th>
+                    @endif
                     <th colspan = "4">
                         <a class='button' href='/question/{{$question->question_id}}'>{{ $question->title }}</a> 
                     </th>

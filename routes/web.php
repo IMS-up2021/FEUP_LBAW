@@ -59,6 +59,10 @@ Route::group(['middleware' => 'auth','prefix' => 'administration'], function () 
     //Delete User
     Route::get('/delete-user',[AdminController::class, 'showDeleteUser']);
     Route::delete('/delete-user',[AdminController::class, 'deleteUser'])->name('deleteUser');
+
+    //Search User
+    Route::get('/search-user',[AdminController::class, 'showSearchUser']);
+    Route::get('/search-user/search',[AdminController::class, 'searchUser'])->name('searchUser');
     
 });
 
