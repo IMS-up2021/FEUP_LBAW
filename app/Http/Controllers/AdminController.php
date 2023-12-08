@@ -152,4 +152,51 @@ class AdminController extends Controller
         $user = User::find($id);
         return view('pages.editUserForm', ['user' => $user]);
     }
+
+    public function editUser(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'username' => 'required|max:255',
+            'email' => 'required|email|max:250',
+            'password' => 'required|min:8|confirmed',
+            'role' => 'required|in:1,2,3',
+            'description' => 'required|max:255',
+        ]);
+
+        $user = User::find($id);
+
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->password = Hash::make($validatedData['password']);
+        $user->description = $request->description;
+        $user->save();
+
+        switch ($validatedData['role']) {
+            case 1:
+                if(!$user->admin){
+                    $user->admin()->create(); 
+                }
+                break;
+            case 2:
+                if($user->admin) {
+                    $user->admin()->delete();
+                }
+                $user->moderator()->create(); 
+                break;
+            case 3:
+                if($user->admin) {
+                    $user->admin()->delete();
+                }
+                if($user->moderator) {
+                    $user->moderator()->delete();
+                }
+        }
+
+        if($user) {
+            return redirect('administration/edit-user?error=0');
+        }
+        else{ 
+            return redirect('administration/edit-user?error=1');
+        }
+    }
 }
