@@ -162,6 +162,10 @@ class QuestionController extends Controller
                 'tag_id' => $request->tag_id,
             ]);
 
+            $question->update([
+                'status' => $request->status,
+            ]);
+
             return redirect('question/'. $question->question_id); 
         } else {
             return redirect('/home?error=2'); 
