@@ -207,32 +207,32 @@ AFTER INSERT ON reviews
 FOR EACH ROW
 EXECUTE FUNCTION update_score_after_review();
 
-/*
+
 -- TRIGGER02 
 -- Create a trigger to insert a notification after a new publication
-CREATE OR REPLACE FUNCTION trigger_notifications_function() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION notifications_function() RETURNS TRIGGER AS $$
 BEGIN
-    IF NEW.user_id IS NOT NULL THEN
-        -- Insert a notification of type 'answer_notif'
-        INSERT INTO notification (user_id, description)
-        VALUES (NEW.user_id, 'New answer or comment on your question.');
-    END IF;
-    
     IF NEW.question_answer_id IS NOT NULL THEN
         -- Insert a notification of type 'answer_notif'
-        INSERT INTO notification (user_id, description)
-        VALUES (NEW.user_id, 'New comment on your answer');
+        INSERT INTO notification (user_id, question_id, description)
+        VALUES (NEW.user_id, NEW.question_id, 'New answer or comment on your question.');
+    END IF;
+
+    IF NEW.question_answer_id IS NOT NULL THEN
+        -- Insert a notification of type 'answer_notif'
+        INSERT INTO notification (user_id, answer_id, description)
+        VALUES (NEW.user_id, NEW.answer_id, 'New comment on your answer');
     END IF;
 
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$
+ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_notifications
-AFTER INSERT ON question_or_answer
+AFTER INSERT ON notification
 FOR EACH ROW
-EXECUTE FUNCTION trigger_notifications_function();
-*/
+EXECUTE FUNCTION notifications_function();
 
 
 --------------POPULATE----------------
