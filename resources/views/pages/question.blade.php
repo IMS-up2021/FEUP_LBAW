@@ -92,27 +92,6 @@
         });
     });
 });
-
-document.getElementById('mark-as-correct-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    fetch(this.action, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            location.reload();
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-});
 </script>
 @section('content')
 
@@ -171,7 +150,7 @@ document.getElementById('mark-as-correct-form').addEventListener('submit', funct
         </form>   
         @endif
         @if (Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id())
-        <form id="mark-as-correct-form">
+        <form method="POST" action="{{ route('markAsCorrect', ['id' => $answer->answer_id]) }}" id="mark-as-correct-form">
             @csrf
             <button type="submit">Mark as Correct</button>
         </form>

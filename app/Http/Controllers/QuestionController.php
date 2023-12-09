@@ -204,14 +204,13 @@ public function updateAnswer(Request $request, $question_id, $answer_id)
     }
 }
 
-public function markAsCorrect(Request $request, $answer_id)
+public function markAsCorrect(Request $request, $id)
 {
-    $answer = Answer::find($answer_id);
+    $answer = Answer::find($id);
     $answer->is_correct = true;
     $answer->save();
 
-    return response()->json(['success' => true]);
+    return redirect()->back();
 }
-
 
 }

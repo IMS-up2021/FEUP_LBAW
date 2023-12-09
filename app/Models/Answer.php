@@ -35,5 +35,15 @@ class Answer extends Model
         return $this->hasMany(AnswerNotification::class);
     }
 
+    protected $is_correct;
 
+    public function getIsCorrect()
+    {
+        return $this->is_correct;
+    }
+
+    public function setIsCorrect($is_correct)
+    {
+        $this->is_correct = true;
+    }
 }
