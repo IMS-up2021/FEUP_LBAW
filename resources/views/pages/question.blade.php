@@ -134,8 +134,7 @@
         <div>
             <li>{{ $answer->questionOrAnswer->publication->content}}</li>   
             <p>Answered by: {{ optional($user_answer)->username ?? 'Deleted User' }}</p>
-            <p>Answered by: {{ $user_answer->username }}</p>
-            <p>Status: {{ $answer->is_correct }}</p>
+            <p>Status: <th>{{ $answer->is_correct == 1 ? 'Correct' : 'None' }}</th></p>
             <p>Date: {{ $answer->questionOrAnswer->publication->date->format('Y-m-d H:i:s') }}</p>        
         </div>
         @if(Auth::check() && $answer->questionOrAnswer->publication->user_id === Auth::id())
