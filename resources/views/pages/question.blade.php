@@ -92,6 +92,27 @@
         });
     });
 });
+
+document.getElementById('mark-as-correct-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    fetch(this.action, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
 </script>
 @section('content')
 
@@ -134,6 +155,7 @@
         <div>
             <li>{{ $answer->questionOrAnswer->publication->content}}</li>   
             <p>Answered by: {{ $user_answer->username }}</p>
+            <p>Status: {{ $answer->is_correct }}</p>
             <p>Date: {{ $answer->questionOrAnswer->publication->date->format('Y-m-d H:i:s') }}</p>        
         </div>
         @if(Auth::check() && $answer->questionOrAnswer->publication->user_id === Auth::id())
@@ -147,6 +169,12 @@
             <input type="hidden" name="answer_id" value="{{ $answer->answer_id }}">
             <button type="submit">Edit Answer</button>
         </form>   
+        @endif
+        @if (Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id())
+        <form id="mark-as-correct-form">
+            @csrf
+            <button type="submit">Mark as Correct</button>
+        </form>
         @endif
         <a class='button' href='/question/{{$question->question_id}}/answer/{{$answer->answer_id}}/comments'>View Comments</a>
         @endforeach
