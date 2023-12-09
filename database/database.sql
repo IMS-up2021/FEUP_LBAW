@@ -83,7 +83,8 @@ CREATE TABLE question(
 CREATE TABLE answer(
     answer_id INTEGER PRIMARY KEY,
     FOREIGN KEY (answer_id) REFERENCES question_or_answer(question_answer_id) ON DELETE CASCADE,
-    question_id INTEGER NOT NULL REFERENCES Question(question_id) ON DELETE CASCADE
+    question_id INTEGER NOT NULL REFERENCES Question(question_id) ON DELETE CASCADE,
+    is_correct BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE comment(
@@ -176,7 +177,7 @@ EXECUTE PROCEDURE question_search_update();
 CREATE INDEX question_title_idx ON question USING GIN (tsvectors);
 
 
-/*
+
 -----------------------------------------
 -- TRIGGERS 
 -----------------------------------------
@@ -206,7 +207,7 @@ AFTER INSERT ON reviews
 FOR EACH ROW
 EXECUTE FUNCTION update_score_after_review();
 
-
+/*
 -- TRIGGER02 
 -- Create a trigger to insert a notification after a new publication
 CREATE OR REPLACE FUNCTION trigger_notifications_function() RETURNS TRIGGER AS $$

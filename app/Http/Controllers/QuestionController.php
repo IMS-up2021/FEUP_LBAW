@@ -162,6 +162,10 @@ class QuestionController extends Controller
                 'tag_id' => $request->tag_id,
             ]);
 
+            $question->update([
+                'status' => $request->status,
+            ]);
+
             return redirect('question/'. $question->question_id); 
         } else {
             return redirect('/home?error=2'); 
@@ -202,6 +206,15 @@ public function updateAnswer(Request $request, $question_id, $answer_id)
     } else {
         return redirect('question/' . $question->question_id . '?error=6'); 
     }
+}
+
+public function markAsCorrect(Request $request, $id)
+{
+    $answer = Answer::find($id);
+    $answer->is_correct = true;
+    $answer->save();
+
+    return redirect()->back();
 }
 
 }

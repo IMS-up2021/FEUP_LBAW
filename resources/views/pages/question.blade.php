@@ -134,6 +134,8 @@
         <div>
             <li>{{ $answer->questionOrAnswer->publication->content}}</li>   
             <p>Answered by: {{ optional($user_answer)->username ?? 'Deleted User' }}</p>
+            <p>Answered by: {{ $user_answer->username }}</p>
+            <p>Status: {{ $answer->is_correct }}</p>
             <p>Date: {{ $answer->questionOrAnswer->publication->date->format('Y-m-d H:i:s') }}</p>        
         </div>
         @if(Auth::check() && $answer->questionOrAnswer->publication->user_id === Auth::id())
@@ -147,6 +149,12 @@
             <input type="hidden" name="answer_id" value="{{ $answer->answer_id }}">
             <button type="submit">Edit Answer</button>
         </form>   
+        @endif
+        @if (Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id())
+        <form method="POST" action="{{ route('markAsCorrect', ['id' => $answer->answer_id]) }}" id="mark-as-correct-form">
+            @csrf
+            <button type="submit">Mark as Correct</button>
+        </form>
         @endif
         <a class='button' href='/question/{{$question->question_id}}/answer/{{$answer->answer_id}}/comments'>View Comments</a>
         @endforeach

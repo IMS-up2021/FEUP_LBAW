@@ -81,6 +81,7 @@ Route::group(['middleware' => 'auth','prefix' => 'question'], function () {
     Route::get('/{id}/answer',[QuestionController::class, 'show']);
     Route::post('/{id}/answer', [QuestionController::class, 'createAnswer'])->name('createAnswer');
     Route::delete('/{id}/answer/', [QuestionController::class, 'deleteAnswer'])->name('deleteAnswer');
+    Route::post('/{id}/mark-as-correct', [QuestionController::class, 'markAsCorrect'])->name('markAsCorrect');
 
     //Edit Answer
     Route::get('/{id}/answer/{answer_id}/edit', [QuestionController::class, 'showEditAnswerForm'])->name('showEditAnswerForm');

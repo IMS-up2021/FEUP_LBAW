@@ -22,7 +22,14 @@
                 </option>
             @endforeach
         </select>
-        
+
+       <!-- Question Status -->
+    <label for="status">Status:</label>
+        <select id="status" name="status" required>
+            <option value="open" {{ old('status') == 'open' ? 'selected' : '' }}>Open</option>
+            <option value="closed" {{ old('status') == 'closed' ? 'selected' : '' }}>Closed</option>
+        </select>
+ 
     <button type="submit">Update Question</button>
 </form>
 
