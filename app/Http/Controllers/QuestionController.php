@@ -208,6 +208,27 @@ public function updateAnswer(Request $request, $question_id, $answer_id)
     }
 }
 
+
+public function upvote(Request $request, $question_id)
+{
+    $question = Question::find($question_id);
+    $question->questionOrAnswer->score += 1; 
+    $question->questionOrAnswer->save();
+
+    return redirect()->back();
+}
+
+public function downvote(Request $request, $question_id)
+{
+    $question = Question::find($question_id);
+    $question->questionOrAnswer->score -= 1; 
+    $question->questionOrAnswer->save();
+
+    return redirect()->back();
+}
+
+
+
 public function markAsCorrect(Request $request, $id)
 {
     $answer = Answer::find($id);

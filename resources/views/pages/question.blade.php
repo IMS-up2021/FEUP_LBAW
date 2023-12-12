@@ -107,6 +107,15 @@
     <p>Status: {{ $question->status }}</p>
     <p>Posted on: {{ $question->questionOrAnswer->publication->date->format('Y-m-d H:i:s') }}</p>
     <p>Created by : {{ optional($user_question)->username ?? 'Deleted User' }}</p>
+
+    <form method="POST" action="{{ route('question.upvote', ['id' => $question->question_id]) }}" id="upvote-question">
+        @csrf
+        <button type="submit">Upvotes</button>
+    </form>
+    <form method="POST" action="{{ route('question.downvote', ['id' => $question->question_id]) }}" id="downvote-question">
+        @csrf
+        <button type="submit">Downvotes</button>
+    </form>
     
     @if(Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id())
     <form method="GET" action="{{ url('/question/' . $question->question_id . '/edit') }}">

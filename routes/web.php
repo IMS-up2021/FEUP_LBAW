@@ -76,6 +76,10 @@ Route::group(['middleware' => 'auth','prefix' => 'question'], function () {
     //Create Question
     Route::post('/',[QuestionController::class, 'createQuestion'])->name('createQuestion');
     Route::get('/',[QuestionController::class, 'showCreateForm']);
+
+    //Votes on Questions
+    Route::post('/{id}/upvote', [QuestionController::class, 'upvote'])->name('question.upvote');
+    Route::post('/{id}/downvote', [QuestionController::class, 'downvote'])->name('question.downvote');
    
     //Answer
     Route::get('/{id}/answer',[QuestionController::class, 'show']);
