@@ -28,6 +28,11 @@ Route::redirect('/', '/login');
 Route::get('/home', [HomeController::class, 'show'])->name('home');
 Route::get('/home/search', [HomeController::class, 'search'])->name('search');
 
+// Appeal for unblock
+Route::group(['prefix' => 'appeal'], function () {
+    Route::get('/',[UserController::class, 'showAppeal']);
+    Route::post('/',[UserController::class, 'createAppeal'])->name('createAppeal');
+});
 
 //Admin 
 Route::group(['middleware' => 'auth','prefix' => 'administration'], function () {

@@ -89,6 +89,12 @@ class QuestionController extends Controller
 
     public function showCreateForm()
     {
+        if (Auth::user()->blocked) {
+            return redirect('/appeal')->withErrors([
+                'email' => 'Your account is blocked. Please contact support.',
+            ])->onlyInput('email');
+        }
+
         $tags = Tag::all();
         return view('pages.createQuestion', [
             'tags' =>  $tags
@@ -96,6 +102,13 @@ class QuestionController extends Controller
     }
 
     public function show($id){
+        
+        if (Auth::user()->blocked) {
+            return redirect('/appeal')->withErrors([
+                'email' => 'Your account is blocked. Please contact support.',
+            ])->onlyInput('email');
+        }
+
         $question = Question::findOrFail($id);
         $answers = Answer::where('question_id', $id)->get();
         return view('pages.question', [
@@ -106,6 +119,12 @@ class QuestionController extends Controller
 
     public function showEditForm($id)
     {
+        if (Auth::user()->blocked) {
+            return redirect('/appeal')->withErrors([
+                'email' => 'Your account is blocked. Please contact support.',
+            ])->onlyInput('email');
+        }
+
         $tags = Tag::all();
         $question = Question::findOrFail($id);
         if (Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id()) {
@@ -117,6 +136,12 @@ class QuestionController extends Controller
 
     public function showEditAnswerForm($id, $answer_id)
 {
+    if (Auth::user()->blocked) {
+        return redirect('/appeal')->withErrors([
+            'email' => 'Your account is blocked. Please contact support.',
+        ])->onlyInput('email');
+    }
+    
     $answer = Answer::findOrFail($answer_id);
     $question = Question::findOrFail($id);
     return view('pages.editAnswer', ['answer' => $answer, 'question' => $question]);

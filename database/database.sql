@@ -73,6 +73,13 @@ CREATE TABLE question_or_answer(
     score INTEGER NOT NULL DEFAULT 0
 );
 
+
+CREATE TABLE appeal_unblock (
+    appeal_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    description TEXT NOT NULL
+);
+
 CREATE TABLE question(
     question_id INTEGER PRIMARY KEY,
     FOREIGN KEY (question_id) REFERENCES question_or_answer(question_answer_id) ON DELETE CASCADE,
