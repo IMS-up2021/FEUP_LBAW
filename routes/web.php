@@ -29,7 +29,7 @@ Route::get('/home', [HomeController::class, 'show'])->name('home');
 Route::get('/home/search', [HomeController::class, 'search'])->name('search');
 
 // Appeal for unblock
-Route::group(['prefix' => 'appeal'], function () {
+Route::group(['middleware' => 'auth', 'prefix' => 'appeal'], function () {
     Route::get('/',[UserController::class, 'showAppeal']);
     Route::post('/',[UserController::class, 'createAppeal'])->name('createAppeal');
 });
@@ -73,6 +73,9 @@ Route::group(['middleware' => 'auth','prefix' => 'administration'], function () 
     Route::get('/block-user',[AdminController::class, 'showBlockUser']);
     Route::put('/block-user/{id}',[AdminController::class, 'blockUser'])->name('blockUser');
     
+    //Show Appeals
+    Route::get('/show-appeals',[AdminController::class, 'showAppeals']);
+    Route::delete('/show-appeals',[AdminController::class, 'deleteAppeal'])->name('deleteAppeal');
 });
 
 // Question

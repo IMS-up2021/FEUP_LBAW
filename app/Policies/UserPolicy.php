@@ -20,4 +20,5 @@ class UserPolicy
     {
         return !$user->blocked;
     }
+    
 }
