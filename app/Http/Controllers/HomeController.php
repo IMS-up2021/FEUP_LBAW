@@ -6,14 +6,19 @@ use App\Models\Question;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class HomeController extends Controller
 {
-    /**
-     * Show the home page.
-     */
     public function show()
     {
+
+        if (Auth::user()->blocked) {
+            return redirect('/appeal')->withErrors([
+                'email' => 'Your account is blocked. Please contact support.',
+            ])->onlyInput('email');
+        }
+
         if (!Auth::check()) {
             // Not logged in, redirect to login.
             return redirect('/login');
@@ -45,6 +50,12 @@ class HomeController extends Controller
 
     public function search(Request $request)
     {
+        if (Auth::user()->blocked) {
+            return redirect('/appeal')->withErrors([
+                'email' => 'Your account is blocked. Please contact support.',
+            ])->onlyInput('email');
+        }
+        
         $validatedData = $request->validate([
             'search' => 'required|string|max:255',
         ]);

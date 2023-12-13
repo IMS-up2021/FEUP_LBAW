@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tag;
 use App\Models\User;
+use App\Models\Appeal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -295,6 +296,35 @@ class AdminController extends Controller
         }
         else{ 
             return redirect('administration/block-user?error=1');
+        }
+    }
+
+    public function showAppeals(){
+
+        $this->authorize('showAdministration', User::class);
+
+        $appeals = Appeal::all();
+        
+        return view('pages.showAppeals', ['appeals' => $appeals]);
+    }
+
+    public function deleteAppeal(Request $request)
+    {
+        $this->authorize('showAdministration', User::class);
+
+        $request->validate([
+            'appeal_id' => 'required',
+        ]);
+
+        $appeal = Appeal::find($request->appeal_id);
+
+        $appeal->delete();
+
+        if($appeal) {
+            return redirect('/administration/show-appeals?error=0');
+        }
+        else{ 
+            return redirect('/administration/show-appeals?error=1');
         }
     }
 }
