@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Question;
+use Illuminate\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -45,16 +45,16 @@ class HomeController extends Controller
 
     public function search(Request $request)
     {
-        $search_input = $request->search;
-        $search_terms = explode(' ', trim($search_input));
+        $validatedData = $request->validate([
+            'search' => 'required|string|max:255',
+        ]);
 
-        $questions = Question::where(function ($query) use ($search_terms) {
-            foreach ($search_terms as $term) {
-                $query->orWhereRaw('LOWER(title) LIKE ?', '%' . strtolower($term) . '%');
-            }
+        $search_input = $validatedData['search'];
+    
+        $questions = Question::where(function ($query) use ($search_input) {
+            $query->whereRaw('tsvectors @@ to_tsquery(?, ?)', ['english', $search_input]);
         })->get();
-        
-        
+    
         return view('pages.search', ['questions' => $questions]);
     }
 }
