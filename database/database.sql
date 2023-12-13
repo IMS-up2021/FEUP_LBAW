@@ -154,7 +154,7 @@ CREATE INDEX date_index ON publication USING btree (date);
 -- FTS INDEXES
 
 -- Add a column to store computed ts_vectors.
-ALTER TABLE Question
+ALTER TABLE question
 ADD COLUMN tsvectors TSVECTOR;
 
 -- Create a function to automatically update ts_vectors.
@@ -169,7 +169,7 @@ $$ LANGUAGE plpgsql;
 
 -- Create a trigger before insert or update on Question.
 CREATE TRIGGER question_search_update
-BEFORE INSERT OR UPDATE ON Question
+BEFORE INSERT OR UPDATE ON question
 FOR EACH ROW
 EXECUTE PROCEDURE question_search_update();
 
