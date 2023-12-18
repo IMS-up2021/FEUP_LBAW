@@ -13,6 +13,12 @@ class CommentController extends Controller
 {
     public function showComments($id)
     {
+        if (Auth::user()->blocked) {
+            return redirect('/appeal')->withErrors([
+                'email' => 'Your account is blocked. Please contact support.',
+            ])->onlyInput('email');
+        }
+
         $question = Question::findOrFail($id);
         $questionOrAnswer_id = $question->questionOrAnswer->question_answer_id;
         $comments = Comment::where('question_answer_id', $questionOrAnswer_id)->get();
@@ -25,6 +31,12 @@ class CommentController extends Controller
 
     public function showAnswerComments($id, $answer_id)
     {
+        if (Auth::user()->blocked) {
+            return redirect('/appeal')->withErrors([
+                'email' => 'Your account is blocked. Please contact support.',
+            ])->onlyInput('email');
+        }
+
         $answer = Answer::findOrFail($answer_id);
         $questionOrAnswer_id = $answer->questionOrAnswer->question_answer_id;
         $comments = Comment::where('question_answer_id', $questionOrAnswer_id)->get();
@@ -39,6 +51,12 @@ class CommentController extends Controller
 
     public function showAnswerCommentForm($id, $answer_id, $comment_id)
     {
+        if (Auth::user()->blocked) {
+            return redirect('/appeal')->withErrors([
+                'email' => 'Your account is blocked. Please contact support.',
+            ])->onlyInput('email');
+        }
+
         $answer = Answer::findOrFail($answer_id);
         $question = Question::findOrFail($id);
         $comment = Comment::findOrFail($comment_id);
@@ -51,6 +69,12 @@ class CommentController extends Controller
 
     public function showQuestionCommentForm($id, $comment_id)
     {
+        if (Auth::user()->blocked) {
+            return redirect('/appeal')->withErrors([
+                'email' => 'Your account is blocked. Please contact support.',
+            ])->onlyInput('email');
+        }
+
         $question = Question::findOrFail($id);
         $comment = Comment::findOrFail($comment_id);
         return view('pages.editQuestionComment', [

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Answer;
+use App\Models\Appeal;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -48,6 +49,31 @@ class UserController extends Controller
         $user->password = Hash::make($validatedData['password']);
         $user->description = $request->description;
         $user->save();
+    }
 
+    public function showAppeal(){
+        $this->authorize('showAppeal', User::class);
+        return view('pages.appeal');
+    }
+
+    public function createAppeal(Request $request){
+
+        $request->validate([
+            'description' => 'required|max:255',
+        ]);
+
+        $user = User::findOrFail(auth()->user()->id);
+
+        $appeal = Appeal::create([
+            'user_id' => $user->id,
+            'description' => $request->description,
+        ]);
+
+        if($appeal) {
+            return redirect('/appeal?error=0');
+        }
+        else{ 
+            return redirect('/appeal?error=1');
+        }
     }
 }

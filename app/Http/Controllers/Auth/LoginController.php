@@ -40,8 +40,8 @@ class LoginController extends Controller
             $user = Auth::user();
     
             if ($user->blocked) {
-                Auth::logout();
-                return back()->withErrors([
+    
+                return redirect('/appeal')->withErrors([
                     'email' => 'Your account is blocked. Please contact support.',
                 ])->onlyInput('email');
             }
