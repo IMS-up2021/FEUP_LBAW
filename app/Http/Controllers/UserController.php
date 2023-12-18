@@ -25,7 +25,7 @@ class UserController extends Controller
         return view('pages.user', ['user' => $user, 'questions' => $questions, 'answers' => $answers]);
     }
 
-    public function showEditUserForm($id) {
+    public function editProfileForm($id) {
 
         $user = User::find($id);
         return view('pages.editProfileForm', ['user' => $user]);
