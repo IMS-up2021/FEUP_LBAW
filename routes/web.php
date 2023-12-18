@@ -117,6 +117,8 @@ Route::group(['middleware' => 'auth','prefix' => 'question'], function () {
 Route::group(['middleware' => 'auth','prefix' => 'user'], function () {
     Route::get('/{id}',[UserController::class, 'show']);
 });
+Route::get('/{id}', [UserController::class, 'editProfileForm'])->name('editProfileForm');
+Route::put('/{id}', [UserController::class, 'editProfile'])->name('editProfile');
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {

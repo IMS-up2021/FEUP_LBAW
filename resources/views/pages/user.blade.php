@@ -7,6 +7,10 @@
     <p>Email: {{ $user->email }}</p>
     <p>Username: {{ $user->username }}</p>
     <p>Description: {{ $user->description ?? 'No description available' }}</p>
+    
+</div>
+<div>
+    <a class="button" href="{{ route('editProfileForm', ['id' => $user->id]) }}">Edit Profile</a>
 </div>
 
 <hr>
