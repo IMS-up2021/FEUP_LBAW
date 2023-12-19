@@ -10,7 +10,8 @@ use App\Models\Publication;
 use Illuminate\Http\Request;
 use App\Models\QuestionOrAnswer;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\Review;
+use Illuminate\Foundation\Auth\User;
 
 class QuestionController extends Controller
 {
@@ -98,9 +99,15 @@ class QuestionController extends Controller
     public function show($id){
         $question = Question::findOrFail($id);
         $answers = Answer::where('question_id', $id)->get();
+        $user = Auth::user();
+        $review = Review::where('user_id', $user->id)
+                        ->where('question_answer_id', $question->questionOrAnswer->question_answer_id)
+                        ->first();
         return view('pages.question', [
             'question' => $question,
             'answers' => $answers,
+            'user' => $user,
+            'review' => $review
         ]);
     }
 
@@ -209,26 +216,6 @@ public function updateAnswer(Request $request, $question_id, $answer_id)
 }
 
 
-public function upvote(Request $request, $question_id)
-{
-    $question = Question::find($question_id);
-    $question->questionOrAnswer->score += 1; 
-    $question->questionOrAnswer->save();
-
-    return redirect()->back();
-}
-
-public function downvote(Request $request, $question_id)
-{
-    $question = Question::find($question_id);
-    $question->questionOrAnswer->score -= 1; 
-    $question->questionOrAnswer->save();
-
-    return redirect()->back();
-}
-
-
-
 public function markAsCorrect(Request $request, $id)
 {
     $answer = Answer::find($id);
@@ -236,6 +223,49 @@ public function markAsCorrect(Request $request, $id)
     $answer->save();
 
     return redirect()->back();
+}
+
+public function createQuestionReview(Request $request, $id)
+{
+    $request->validate([
+        'positive' => 'required|boolean', // Ensure it's a boolean
+    ]);
+
+    $question = Question::find($id);
+    $user = Auth::user();
+
+    $review = Review::create([
+        'user_id' => $user->id,
+        'question_answer_id' => $question->questionOrAnswer->question_answer_id,
+        'positive' => $request->positive,
+    ]);
+
+    return redirect('/question/' . $question->question_id);
+}
+
+
+public function changeQuestionReview(Request $request, $id)
+{
+    $request->validate([
+        'user_id' => 'required|exists:users,id',
+        'question_answer_id' => 'required|exists:question_or_answer,question_answer_id',
+        'positive' => 'required|boolean',
+    ]);
+
+
+    $question = Question::find($id);
+
+    $user = User::find($request->user_id);
+
+    $review = Review::where('user_id', $user->id)
+                        ->where('question_answer_id', $question->questionOrAnswer->question_answer_id)
+                        ->first();
+
+    $review->positive = $request->positive;
+    $review->save();
+
+    return redirect('home?success=1');
+
 }
 
 }

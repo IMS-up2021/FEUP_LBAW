@@ -108,15 +108,33 @@
     <p>Posted on: {{ $question->questionOrAnswer->publication->date->format('Y-m-d H:i:s') }}</p>
     <p>Created by : {{ optional($user_question)->username ?? 'Deleted User' }}</p>
 
-    <form method="POST" action="{{ route('question.upvote', ['id' => $question->question_id]) }}" id="upvote-question">
+    @if(Auth::check() && $review == null)
+   <form method="POST" action="{{ route('createQuestionReview', ['id' => $question->question_id]) }}">
         @csrf
-        <button type="submit">Upvotes</button>
+        <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+        <input type="hidden" name="questionAnswer_id" value="{{ $question->question_id }}">
+        <input type="hidden" name="positive" value="1">
+
+        <button type="submit">Vote First Up</button>
     </form>
-    <form method="POST" action="{{ route('question.downvote', ['id' => $question->question_id]) }}" id="downvote-question">
+    @endif
+
+
+    @if(Auth::check() && $review != null)
+    <form method="POST" action="{{ route('changeQuestionReview', ['id' => $question->question_id]) }}">
         @csrf
-        <button type="submit">Downvotes</button>
+        @method('PUT')
+        <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+        <input type="hidden" name="question_answer_id" value="{{ $question->question_id }}">
+        <input type="hidden" name="positive" value="{{ $review->positive ? 0 : 1 }}">
+
+        <button type="submit">{{ $review->positive ? 'Vote Down' : 'Vote Up' }}</button>
     </form>
-    
+    <p>Review Details: {{ $review }}</p>
+    @endif
+
+
+
     @if(Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id())
     <form method="GET" action="{{ url('/question/' . $question->question_id . '/edit') }}">
         <input type="hidden" name="id" value="{{ $question->question_id }}">
