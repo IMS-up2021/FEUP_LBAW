@@ -244,7 +244,7 @@ public function updateAnswer(Request $request, $question_id, $answer_id)
 public function markAsCorrect(Request $request, $id)
 {
     $answer = Answer::find($id);
-    $answer->is_correct = true;
+    $answer->is_correct = $request->correct;
     $answer->save();
 
     return redirect()->back();

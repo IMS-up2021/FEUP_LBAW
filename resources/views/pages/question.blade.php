@@ -192,7 +192,8 @@
         @if (Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id())
         <form method="POST" action="{{ route('markAsCorrect', ['id' => $answer->answer_id]) }}" id="mark-as-correct-form">
             @csrf
-            <button type="submit">Mark as Correct</button>
+            <input type="hidden" name="correct" value="{{ $answer->is_correct ? 0 : 1 }}">
+            <button type="submit">{{ $answer->is_correct ? 'Remove Correct' : 'Mark as Correct' }}</button>
         </form>
         @endif
         <a class='button' href='/question/{{$question->question_id}}/answer/{{$answer->answer_id}}/comments'>View Comments</a>
