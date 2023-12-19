@@ -8,7 +8,7 @@ class UserPolicy
 {
     public function showAdministration(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $user->isModerator();
     }
 
     public function showAppeal(User $user): bool
