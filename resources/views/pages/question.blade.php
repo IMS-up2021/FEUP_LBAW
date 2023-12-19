@@ -107,7 +107,47 @@
     <p>Status: {{ $question->status }}</p>
     <p>Posted on: {{ $question->questionOrAnswer->publication->date->format('Y-m-d H:i:s') }}</p>
     <p>Created by : {{ optional($user_question)->username ?? 'Deleted User' }}</p>
-    
+
+
+    @if($review == null)
+        <form method="POST" action="{{ route('createQuestionReview', ['id' => $question->question_id]) }}">
+            @csrf
+            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+            <input type="hidden" name="question_id" value="{{ $question->question_id }}">
+            <input type="hidden" name="positive" value="1">
+            <button type="submit">Upvote</button>
+        </form>
+        <form method="POST" action="{{ route('createQuestionReview', ['id' => $question->question_id]) }}">
+            @csrf
+            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+            <input type="hidden" name="question_id" value="{{ $question->question_id }}">
+            <input type="hidden" name="positive" value="0">
+            <button type="submit">Downvote</button>
+        </form>
+    @elseif($review->positive)
+        <form method="POST" action="{{ route('changeQuestionReview', ['id' => $question->question_id]) }}">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+            <input type="hidden" name="question_id" value="{{ $question->question_id }}">
+            <input type="hidden" name="positive" value="0">
+            <button type="submit">Downvote</button>
+        </form>
+    @else
+        <form method="POST" action="{{ route('changeQuestionReview', ['id' => $question->question_id]) }}">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+            <input type="hidden" name="question_id" value="{{ $question->question_id }}">
+            <input type="hidden" name="positive" value="1">
+            <button type="submit">Upvote</button>
+        </form>
+    @endif
+
+
+
+
+
     @if(Auth::check() && $question->questionOrAnswer->publication->user_id === Auth::id())
     <form method="GET" action="{{ url('/question/' . $question->question_id . '/edit') }}">
         <input type="hidden" name="id" value="{{ $question->question_id }}">

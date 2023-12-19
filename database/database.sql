@@ -17,7 +17,7 @@ DROP TABLE IF EXISTS moderator CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS subscription CASCADE;
 DROP TABLE IF EXISTS bannings CASCADE;
-DROP TABLE IF EXISTS reviews CASCADE;
+DROP TABLE IF EXISTS review CASCADE;
 
 -----------------------------------------
 -- Domains
@@ -138,14 +138,12 @@ CREATE TABLE bannings(
     date TODAY
 );
 
-CREATE TABLE reviews(
+CREATE TABLE review (
+    id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     question_answer_id INTEGER NOT NULL REFERENCES question_or_answer(question_answer_id) ON DELETE CASCADE,
-    PRIMARY KEY (user_id, question_answer_id),
-    positive BOOLEAN,
-    date TODAY 
+    positive BOOLEAN DEFAULT FALSE
 );
-
 
 
 -----------------------------------------
@@ -193,16 +191,16 @@ CREATE INDEX question_title_idx ON question USING GIN (tsvectors);
 -- Create a trigger to update the score of a question or answer after a review
 CREATE OR REPLACE FUNCTION update_score_after_review() RETURNS TRIGGER AS $$
 BEGIN
-  IF NEW.positive = 1 THEN
+  IF NEW.positive THEN
     -- Increase the score by 1 if the review is positive
     UPDATE question_or_answer
     SET score = score + 1
-    WHERE question_answer_id = NEW.question_or_answer_id;
-  ELSIF NEW.positive = 0 THEN
+    WHERE question_answer_id = NEW.question_answer_id;
+  ELSE
     -- Decrease the score by 1 if the review is not positive
     UPDATE question_or_answer
     SET score = score - 1
-    WHERE question_answer_id = NEW.question_or_answer_id;
+    WHERE question_answer_id = NEW.question_answer_id;
   END IF;
   RETURN NEW;
 END;
@@ -210,7 +208,7 @@ $$ LANGUAGE plpgsql;
 
 -- Create a trigger to execute the update_score_after_review function
 CREATE TRIGGER update_score_trigger
-AFTER INSERT ON reviews
+AFTER INSERT OR UPDATE ON review
 FOR EACH ROW
 EXECUTE FUNCTION update_score_after_review();
 

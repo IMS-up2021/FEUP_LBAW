@@ -5,30 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Reviews extends Model
+class Review extends Model
 {
     use HasFactory;
 
-    protected $table = 'reviews';
+    protected $table = 'review'; 
 
     public $timestamps = false;
 
     protected $fillable = [
         'user_id',
-        'questionAnswer_id',
+        'question_answer_id',
         'positive',
-        'date'
     ];
-
+    
     public function user()
     {
-        return User::find($this->user_id);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function questionAnswer()
     {
-        return QuestionAnswer::find($this->questionAnswer_id);
+        return $this->belongsTo(QuestionAnswer::class, 'question_answer_id');
     }
-
-
 }

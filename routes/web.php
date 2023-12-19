@@ -84,7 +84,11 @@ Route::group(['middleware' => 'auth','prefix' => 'question'], function () {
     //Create Question
     Route::post('/',[QuestionController::class, 'createQuestion'])->name('createQuestion');
     Route::get('/',[QuestionController::class, 'showCreateForm']);
-   
+
+    //Create Review
+    Route::post('/{id}',[QuestionController::class, 'createQuestionReview'])->name('createQuestionReview');
+    Route::put('/{id}',[QuestionController::class, 'changeQuestionReview'])->name('changeQuestionReview');
+    
     //Answer
     Route::get('/{id}/answer',[QuestionController::class, 'show']);
     Route::post('/{id}/answer', [QuestionController::class, 'createAnswer'])->name('createAnswer');
