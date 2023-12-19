@@ -28,6 +28,8 @@
                     <div>
                     @if (Auth::user()->isAdmin())
                         <a href="{{ url('/administration') }}">Administration</a>
+                    @elseif (Auth::user()->isModerator())
+                        <a href="{{ url('/administration') }}">Moderation</a>
                     @endif
                     <a class="button" href="{{ url('/logout') }}"> Logout </a> 
                     <span>

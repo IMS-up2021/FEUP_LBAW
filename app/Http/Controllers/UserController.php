@@ -42,10 +42,9 @@ class UserController extends Controller
             'username' => 'required|max:255',
             'email' => 'required|email|max:250',
             'password' => 'required|min:8|confirmed',
-            'role' => 'required|in:1,2,3',
             'description' => 'required|max:255',
         ]);
-
+        
         $user = User::find($id);
 
         $user->username = $request->username;
@@ -53,6 +52,8 @@ class UserController extends Controller
         $user->password = Hash::make($validatedData['password']);
         $user->description = $request->description;
         $user->save();
+
+        return redirect('/user/'.$user->id);
     }
 
     public function showAppeal(){
