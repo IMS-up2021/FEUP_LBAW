@@ -20,5 +20,10 @@ class UserPolicy
     {
         return !$user->blocked;
     }
+
+    public function showForgetPassword(): bool
+    {
+        return !auth()->check();
+    }
     
 }

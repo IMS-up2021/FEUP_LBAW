@@ -12,6 +12,11 @@ class HomeController extends Controller
 {
     public function show()
     {
+        
+        if (!Auth::check()) {
+            // Not logged in, redirect to login.
+            return redirect('/login');
+        }
 
         if (Auth::user()->blocked) {
             return redirect('/appeal')->withErrors([
@@ -19,10 +24,7 @@ class HomeController extends Controller
             ])->onlyInput('email');
         }
 
-        if (!Auth::check()) {
-            // Not logged in, redirect to login.
-            return redirect('/login');
-        }
+        
         
         $questions = Question::all();
         

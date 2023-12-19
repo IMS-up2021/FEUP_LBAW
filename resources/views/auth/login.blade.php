@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+
+@if(session('message'))
+    <div class="alert alert-success">
+        {{ session('message') }}
+    </div>
+@endif
 <form method="POST" action="{{ route('login') }}">
     {{ csrf_field() }}
 
@@ -23,6 +29,7 @@
     <label>
         <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
     </label>
+    <a class="btn btn-link" href="{{ route('showForgetPassword') }}">Forgot Your Password?</a>
 
     <button type="submit">
         Login
