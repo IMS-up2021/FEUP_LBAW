@@ -78,7 +78,6 @@ class UserController extends Controller
     }
 
     public function showForgetPassword(){
-        $this->authorize('showForgetPassword', User::class);
         return view('pages.forgetPassword');
     }
 }
