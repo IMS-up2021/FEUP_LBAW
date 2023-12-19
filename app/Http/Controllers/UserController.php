@@ -76,4 +76,9 @@ class UserController extends Controller
             return redirect('/appeal?error=1');
         }
     }
+
+    public function showForgetPassword(){
+        $this->authorize('showForgetPassword', User::class);
+        return view('pages.forgetPassword');
+    }
 }

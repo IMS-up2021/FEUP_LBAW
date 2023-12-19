@@ -34,6 +34,12 @@ Route::group(['middleware' => 'auth', 'prefix' => 'appeal'], function () {
     Route::post('/',[UserController::class, 'createAppeal'])->name('createAppeal');
 });
 
+//Forget password
+Route::group(['prefix' => 'password'], function () {
+    Route::get('/reset',[UserController::class, 'showForgetPassword'])->name('showForgetPassword');
+    Route::post('/reset',[UserController::class, 'createForgetPassword'])->name('createForgetPassword');
+});
+
 //Admin 
 Route::group(['middleware' => 'auth','prefix' => 'administration'], function () {
     //Show Administration Page

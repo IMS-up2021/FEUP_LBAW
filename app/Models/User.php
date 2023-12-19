@@ -70,4 +70,14 @@ class User extends Authenticatable
     {
         return $this->moderator()->exists();
     }
+
+    public function isUser()
+    {
+        return !$this->isAdmin() && !$this->isModerator();
+    }
+
+    public function isAuthenticated()
+    {
+        return $this->isUser() || $this->isModerator() || $this->isAdmin();
+    }
 }
