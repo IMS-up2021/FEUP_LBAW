@@ -9,6 +9,7 @@
     <p>Description: {{ $user->description ?? 'No description available' }}</p>
     
 </div>
+
 @if (Auth::check() && $user->id === Auth::id())
 <div>
     <a class="button" href="{{ route('editProfileForm', ['id' => $user->id]) }}">Edit Profile</a>

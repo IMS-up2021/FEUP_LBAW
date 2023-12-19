@@ -128,11 +128,8 @@ Route::group(['middleware' => 'auth','prefix' => 'question'], function () {
 //User
 Route::group(['middleware' => 'auth','prefix' => 'user'], function () {
     Route::get('/{id}',[UserController::class, 'show']);
-    
-});
-Route::group(['middleware' => 'auth','prefix' => 'user'], function (){
-    Route::get('user/{id}', [UserController::class, 'editProfileForm'])->name('editProfileForm');
-    Route::put('user/{id}', [UserController::class, 'editProfile'])->name('editProfile');
+    Route::get('/{id}/edit', [UserController::class, 'editProfileForm'])->name('editProfileForm');
+    Route::put('/{id}/edit', [UserController::class, 'editProfile'])->name('editProfile');
 });
 
 // Authentication
