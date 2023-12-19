@@ -132,9 +132,9 @@ CREATE TABLE bannings(
 );
 
 CREATE TABLE review (
+    id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     question_answer_id INTEGER NOT NULL REFERENCES question_or_answer(question_answer_id) ON DELETE CASCADE,
-    PRIMARY KEY (user_id, question_answer_id),
     positive BOOLEAN DEFAULT FALSE
 );
 
@@ -201,7 +201,7 @@ $$ LANGUAGE plpgsql;
 
 -- Create a trigger to execute the update_score_after_review function
 CREATE TRIGGER update_score_trigger
-AFTER INSERT ON review
+AFTER INSERT OR UPDATE ON review
 FOR EACH ROW
 EXECUTE FUNCTION update_score_after_review();
 

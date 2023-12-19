@@ -13,18 +13,10 @@ class Review extends Model
 
     public $timestamps = false;
 
-    protected $primaryKey = ['user_id', 'question_answer_id'];
-
-    public $incrementing = false;
-
     protected $fillable = [
         'user_id',
         'question_answer_id',
         'positive',
-    ];
-    
-    protected $casts = [
-        'positive' => 'boolean',
     ];
     
     public function user()

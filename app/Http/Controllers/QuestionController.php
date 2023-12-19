@@ -248,8 +248,8 @@ public function changeQuestionReview(Request $request, $id)
 {
     $request->validate([
         'user_id' => 'required|exists:users,id',
-        'question_answer_id' => 'required|exists:question_or_answer,question_answer_id',
-        'positive' => 'required|boolean',
+        'question_id' => 'required|exists:question_or_answer,question_answer_id',
+        'positive' => 'required|boolean', // Ensure it's a boolean
     ]);
 
 
@@ -259,12 +259,12 @@ public function changeQuestionReview(Request $request, $id)
 
     $review = Review::where('user_id', $user->id)
                         ->where('question_answer_id', $question->questionOrAnswer->question_answer_id)
-                        ->first();
-
-    $review->positive = $request->positive;
-    $review->save();
-
-    return redirect('home?success=1');
+                        ->first()->update([
+                            'positive' => $request->positive,
+                        ]);
+    
+                    
+    return redirect('question/'. $question->question_id . '?error=0');
 
 }
 

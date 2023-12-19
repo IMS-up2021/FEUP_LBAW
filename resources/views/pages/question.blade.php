@@ -108,30 +108,43 @@
     <p>Posted on: {{ $question->questionOrAnswer->publication->date->format('Y-m-d H:i:s') }}</p>
     <p>Created by : {{ optional($user_question)->username ?? 'Deleted User' }}</p>
 
-    @if(Auth::check() && $review == null)
-   <form method="POST" action="{{ route('createQuestionReview', ['id' => $question->question_id]) }}">
-        @csrf
-        <input type="hidden" name="user_id" value="{{ Auth::id() }}">
-        <input type="hidden" name="questionAnswer_id" value="{{ $question->question_id }}">
-        <input type="hidden" name="positive" value="1">
 
-        <button type="submit">Vote First Up</button>
-    </form>
+    @if($review == null)
+        <form method="POST" action="{{ route('createQuestionReview', ['id' => $question->question_id]) }}">
+            @csrf
+            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+            <input type="hidden" name="question_id" value="{{ $question->question_id }}">
+            <input type="hidden" name="positive" value="1">
+            <button type="submit">Upvote</button>
+        </form>
+        <form method="POST" action="{{ route('createQuestionReview', ['id' => $question->question_id]) }}">
+            @csrf
+            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+            <input type="hidden" name="question_id" value="{{ $question->question_id }}">
+            <input type="hidden" name="positive" value="0">
+            <button type="submit">Downvote</button>
+        </form>
+    @elseif($review->positive)
+        <form method="POST" action="{{ route('changeQuestionReview', ['id' => $question->question_id]) }}">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+            <input type="hidden" name="question_id" value="{{ $question->question_id }}">
+            <input type="hidden" name="positive" value="0">
+            <button type="submit">Downvote</button>
+        </form>
+    @else
+        <form method="POST" action="{{ route('changeQuestionReview', ['id' => $question->question_id]) }}">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+            <input type="hidden" name="question_id" value="{{ $question->question_id }}">
+            <input type="hidden" name="positive" value="1">
+            <button type="submit">Upvote</button>
+        </form>
     @endif
 
 
-    @if(Auth::check() && $review != null)
-    <form method="POST" action="{{ route('changeQuestionReview', ['id' => $question->question_id]) }}">
-        @csrf
-        @method('PUT')
-        <input type="hidden" name="user_id" value="{{ Auth::id() }}">
-        <input type="hidden" name="question_answer_id" value="{{ $question->question_id }}">
-        <input type="hidden" name="positive" value="{{ $review->positive ? 0 : 1 }}">
-
-        <button type="submit">{{ $review->positive ? 'Vote Down' : 'Vote Up' }}</button>
-    </form>
-    <p>Review Details: {{ $review }}</p>
-    @endif
 
 
 
