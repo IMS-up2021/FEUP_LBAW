@@ -143,6 +143,6 @@ class UserController extends Controller
             $request->email,
         ]);
 
-        return redirect('/login?error=0');
+        return redirect('/login?error=0')->with('message', 'Your password has been reset!');
     }
 }
