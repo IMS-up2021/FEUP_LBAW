@@ -2,12 +2,6 @@
 
 @section('content')
 
-<style>
-    .answer {
-        display: none;
-    }
-</style>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var questions = document.querySelectorAll('.question');

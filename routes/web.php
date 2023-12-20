@@ -30,6 +30,10 @@ Route::get('/about', [HomeController::class, 'showAbout'])->name('showAbout');
 // FAQ
 Route::get('/faq', [HomeController::class, 'showFAQ'])->name('showFAQ');
 
+// Contact
+Route::get('/contact', [HomeController::class, 'showContact'])->name('showContact');
+
+
 Route::get('/home', [HomeController::class, 'show'])->name('home');
 Route::get('/home/search', [HomeController::class, 'search'])->name('search');
 
