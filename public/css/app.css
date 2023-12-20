@@ -29,11 +29,51 @@ header a {
 
   }
 
+  #aboutUs-h1{
+    font-size: 2em;
+    text-align: center;
+    margin: 0.5em;
+    padding: 0.5em;
+  }
+
+  .aboutUs {
+    font-size: 1.2em; 
+    text-align: center;
+   
+  }
+  
+  
   table {
     width: 95%;
     font-family: "Montserrat", sans-serif;
     margin: auto;
     border-collapse: collapse;
+  }
+  #aboutUs p{
+    margin: 0.5em;
+    padding: 0.5em;
+  }
+
+  nav {
+    background-color: #23232e;
+    padding: 0.5em;
+  }
+  nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  nav ul li {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+  }
+  nav ul li a {
+    display: block;
+    padding: 0.5em;
+    color: #ffffff;
+    text-decoration: none;
+    text-align: center;
   }
 
   .button{
