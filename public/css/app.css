@@ -57,6 +57,8 @@ header a {
   nav {
     background-color: #23232e;
     padding: 0.5em;
+    display: flex;
+    align-items: center;
   }
   nav ul {
     list-style-type: none;
@@ -76,6 +78,10 @@ header a {
     text-align: center;
   }
 
+
+  nav ul {
+      margin-left: auto; 
+  }
   .button{
     background-color: #23232e;
   }
@@ -207,4 +213,12 @@ header a {
 
 .contact-info {
   text-align: center;
+}
+
+
+#logo {
+  width: 50px; /* Set the desired width */
+  height: auto; /* Automatically adjust the height to maintain the aspect ratio */
+  display: block; /* Ensure it behaves as a block element */
+  margin: 0 0; /* Center the logo horizontally within the navbar */
 }

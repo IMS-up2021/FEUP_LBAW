@@ -9,6 +9,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+        <link rel='shortcut icon' type='image/x-icon' href="{{ asset('images/logo.png') }}" />
 
         <!-- Styles -->
         <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
@@ -23,28 +24,24 @@
     <body>
         <main>
             <header>
-                <h1><a href="{{ url('/home') }}">BrainShare</a></h1>
                 <nav>
+                <a href="{{ url('/home') }}"><img src="{{ asset('images/logo.png') }}" alt="Logo" id="logo"></a>
+                <h1><a href="{{ url('/home') }}">BrainShare</a></h1>
                     <ul>
                         <li><a href="{{ route('showAbout') }}">About us</a></li>
                         <li><a href="{{ url('/faq') }}">FAQ</a></li>
-                        <li><a href="{{ url('/contact') }}">Contact</a></li>
-                    </ul>
-                </nav>
-                @if (Auth::check())
-                    <div>
+                        <li><a href="{{ url('/contact') }}">Contacts</a></li>
+                    @if (Auth::check())
                     @if (Auth::user()->isAdmin())
-                        <a href="{{ url('/administration') }}">Administration</a>
+                        <li><a href="{{ url('/administration') }}">Administration</a></li>
                     @elseif (Auth::user()->isModerator())
-                        <a href="{{ url('/administration') }}">Moderation</a>
+                        <li><a href="{{ url('/administration') }}">Moderation</a></li>
                     @endif
-                    <a class="button" href="{{ url('/logout') }}"> Logout </a> 
-                    <span>
-                        <a href="{{ url('/user/' . Auth::user()->id) }}">{{ Auth::user()->username }}</a>
-                    </span>
-                   </div>
-                @endif
-               
+                        <li><a class="button" href="{{ url('/logout') }}"> Logout </a></li> 
+                        <li><a href="{{ url('/user/' . Auth::user()->id) }}">{{ Auth::user()->username }}</a></li>
+                        </ul>
+                    @endif
+                </nav>
             </header>
             <section id="content">
                 @yield('content')
