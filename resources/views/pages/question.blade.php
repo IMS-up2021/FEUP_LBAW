@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 <script>
- document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     var answerForm = document.getElementById('answerForm');
 
     answerForm.addEventListener('submit', function (e) {
-        e.preventDefault(); 
+        e.preventDefault();
 
         var formData = new FormData(answerForm);
 
@@ -17,79 +17,109 @@
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
             },
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            var answersContainer = document.getElementById('answersContainer');
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                var answersContainer = document.getElementById('answersContainer');
 
-            // Create container div for the answer
-            var answerContainer = document.createElement('div');
-            answerContainer.innerHTML = '<li>' + data.content + '</li><p>Answered by: ' + data.user.username + '</p><p>Date: ' + data.date + '</p>';
+                // Create container div for the answer
+                var answerContainer = document.createElement('div');
+                answerContainer.innerHTML = '<li>' + data.content + '</li><p>Answered by: ' + data.user.username + 
+                '<p>Status: <th>' + (data.is_correct ? 'Correct' : 'None') + '</th></p><p>Date: ' + data.date + '</p>';
 
-            // Create form for deleting the answer
-            var deleteForm = document.createElement('form');
-            deleteForm.action = '{{ route('deleteAnswer', ['id' => $question->question_id]) }}';
-            deleteForm.method = 'POST';
+                // Create form for deleting the answer
+                var deleteForm = document.createElement('form');
+                deleteForm.action = '{{ route('deleteAnswer', ['id' => $question->question_id]) }}';
+                deleteForm.method = 'POST';
 
-            // Add CSRF token input
-            var csrfInput = document.createElement('input');
-            csrfInput.type = 'hidden';
-            csrfInput.name = '_token';
-            csrfInput.value = '{{ csrf_token() }}';
-            deleteForm.appendChild(csrfInput);
+                // Add CSRF token input
+                var csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = '{{ csrf_token() }}';
+                deleteForm.appendChild(csrfInput);
 
-            // Add method override input
-            var methodInput = document.createElement('input');
-            methodInput.type = 'hidden';
-            methodInput.name = '_method';
-            methodInput.value = 'DELETE';
-            deleteForm.appendChild(methodInput);
+                // Add method override input
+                var methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'DELETE';
+                deleteForm.appendChild(methodInput);
 
-            // Add answer ID input
-            var answerIdInput = document.createElement('input');
-            answerIdInput.type = 'hidden';
-            answerIdInput.name = 'answer_id';
-            answerIdInput.value = data.answer_id; 
-            deleteForm.appendChild(answerIdInput);
+                // Add answer ID input
+                var answerIdInput = document.createElement('input');
+                answerIdInput.type = 'hidden';
+                answerIdInput.name = 'answer_id';
+                answerIdInput.value = data.answer_id; 
+                deleteForm.appendChild(answerIdInput);
 
-            // Add delete button
-            var deleteButton = document.createElement('button');
-            deleteButton.type = 'submit';
-            deleteButton.textContent = 'Delete Answer';
-            deleteButton.addEventListener('click', function () {
-                return confirm('Are you sure you want to delete this answer?');
+                // Add delete button
+                var deleteButton = document.createElement('button');
+                deleteButton.type = 'submit';
+                deleteButton.textContent = 'Delete Answer';
+                deleteButton.addEventListener('click', function () {
+                    return confirm('Are you sure you want to delete this answer?');
+                });
+
+                deleteForm.appendChild(deleteButton);
+                answerContainer.appendChild(deleteForm);
+
+                // Create form for editing the answer
+                var editForm = document.createElement('form');
+                editForm.action = '{{ route('showEditAnswerForm', ['id' => $question->question_id, 'answer_id' => 'REPLACE_WITH_ANSWER_ID']) }}'.replace('REPLACE_WITH_ANSWER_ID', data.answer_id);
+                editForm.method = 'GET';
+
+                // Add edit button
+                var editButton = document.createElement('button');
+                editButton.type = 'submit';
+                editButton.textContent = 'Edit Answer';
+
+                editForm.appendChild(editButton);
+                answerContainer.appendChild(editForm);
+
+                // Add mark as correct form and View Comments link
+                if (data.question_user === {{ Auth::id() }}) {
+                    var markAsCorrectForm = document.createElement('form');
+                    markAsCorrectForm.action = '{{ route('markAsCorrect', ['id' => 'REPLACE_WITH_ANSWER_ID']) }}'.replace('REPLACE_WITH_ANSWER_ID', data.answer_id);
+                    markAsCorrectForm.method = 'POST';
+
+                    // Add CSRF token input for mark as correct form
+                    var markAsCorrectCsrfInput = document.createElement('input');
+                    markAsCorrectCsrfInput.type = 'hidden';
+                    markAsCorrectCsrfInput.name = '_token';
+                    markAsCorrectCsrfInput.value = '{{ csrf_token() }}';
+                    markAsCorrectForm.appendChild(markAsCorrectCsrfInput);
+
+                    // Add hidden input for mark as correct
+                    var markAsCorrectInput = document.createElement('input');
+                    markAsCorrectInput.type = 'hidden';
+                    markAsCorrectInput.name = 'correct';
+                    markAsCorrectInput.value = data.is_correct ? 0 : 1;
+                    markAsCorrectForm.appendChild(markAsCorrectInput);
+
+                    // Add mark as correct button
+                    var markAsCorrectButton = document.createElement('button');
+                    markAsCorrectButton.type = 'submit';
+                    markAsCorrectButton.textContent = data.is_correct ? 'Remove Correct' : 'Mark as Correct';
+
+                    markAsCorrectForm.appendChild(markAsCorrectButton);
+                    answerContainer.appendChild(markAsCorrectForm);
+                }
+
+                var viewCommentsLink = document.createElement('a');
+                viewCommentsLink.className = 'button';
+                viewCommentsLink.href = '/question/' + data.question_id + '/answer/' + data.answer_id + '/comments';
+                viewCommentsLink.textContent = 'View Comments';
+
+                answerContainer.appendChild(viewCommentsLink);
+
+                answersContainer.appendChild(answerContainer);
+
+                answerForm.reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
-
-            deleteForm.appendChild(deleteButton);
-            answerContainer.appendChild(deleteForm);
-            
-            // Create form for editing the answer
-            var editForm = document.createElement('form');
-            editForm.action = '{{ route('showEditAnswerForm', ['id' => $question->question_id, 'answer_id' => 'REPLACE_WITH_ANSWER_ID']) }}'.replace('REPLACE_WITH_ANSWER_ID', data.answer_id);
-            editForm.method = 'GET';
-
-            // Add answer ID input for editing
-            var editAnswerIdInput = document.createElement('input');
-            editAnswerIdInput.type = 'hidden';
-            editAnswerIdInput.name = 'answer_id';
-            editAnswerIdInput.value = data.answer_id; 
-            editForm.appendChild(editAnswerIdInput);
-
-            // Add edit button
-            var editButton = document.createElement('button');
-            editButton.type = 'submit';
-            editButton.textContent = 'Edit Answer';
-
-            editForm.appendChild(editButton);
-            answerContainer.appendChild(editForm);
-
-            answersContainer.appendChild(answerContainer);
-
-            answerForm.reset();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
     });
 });
 </script>
@@ -157,7 +187,7 @@
     <form method="POST">
         @csrf
         @method('DELETE')
-        <button type="submit" onclick="return confirm('Are you sure you want to delete this question?')">Delete Question</button>
+        <button type="submit">Delete Question</button>
     </form>
     @endif
     <a class='button' href='/question/{{$question->question_id}}/comments'>View Question Comments</a>
@@ -182,7 +212,7 @@
             @csrf
             @method('DELETE')
             <input type="hidden" name="answer_id" value="{{ $answer->answer_id }}">
-            <button type="submit" onclick="return confirm('Are you sure you want to delete this answer?')">Delete Answer</button>
+            <button type="submit">Delete Answer</button>
         </form>
         <form method="GET" action="{{ route('showEditAnswerForm', ['id' => $question->question_id, 'answer_id' => $answer->answer_id]) }}">
             <input type="hidden" name="answer_id" value="{{ $answer->answer_id }}">

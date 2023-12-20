@@ -73,13 +73,18 @@ class QuestionController extends Controller
             'question_id' => $request->question_id,
         ]);
 
+        $question_user = Question::where('question_id', $request->question_id)->first()->questionOrAnswer->publication->user_id;
+        
         //Return the question
         if ($answer) {
             return response()->json([
                 'content' => $request->content,
                 'user' => Auth::user(), 
                 'date' => $request->date,
-                'answer_id' => $answer->answer_id
+                'answer_id' => $answer->answer_id,
+                'question_id' => $request->question_id,
+                'is_correct' => $answer->is_correct,
+                'question_user' => $question_user,
             ]);
         } else {
             return response()->json(['error' => 'Failed to create answer'], JsonResponse::HTTP_BAD_REQUEST);
