@@ -2,7 +2,7 @@
 
 @section('content')
 
-<h1>Send Password Reset Link</h1>
+<h1 id="h1-reset-password">Send Password Reset Link</h1>
 
 @if(session('message'))
     <div class="alert alert-success">

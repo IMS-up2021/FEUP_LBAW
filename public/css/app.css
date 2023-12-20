@@ -139,10 +139,7 @@ header a {
       max-width: 25em;
     }
   }
-  /**
-   * Override milligram colors
-   * Some styles might be missing
-   **/
+
   button {
     background-color: #23232e;
     border-color: #23232e;
@@ -215,10 +212,16 @@ header a {
   text-align: center;
 }
 
-
 #logo {
-  width: 50px; /* Set the desired width */
-  height: auto; /* Automatically adjust the height to maintain the aspect ratio */
-  display: block; /* Ensure it behaves as a block element */
-  margin: 0 0; /* Center the logo horizontally within the navbar */
+  width: 50px; 
+  height: auto; 
+  display: block; 
+  margin: 0 0; 
+}
+
+#h1-reset-password{
+  font-size: 2em;
+  text-align: center;
+  margin: 0.5em;
+  padding: 0.5em;
 }

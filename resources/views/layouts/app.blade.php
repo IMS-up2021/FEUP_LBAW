@@ -37,8 +37,8 @@
                     @elseif (Auth::user()->isModerator())
                         <li><a href="{{ url('/administration') }}">Moderation</a></li>
                     @endif
-                        <li><a class="button" href="{{ url('/logout') }}"> Logout </a></li> 
                         <li><a href="{{ url('/user/' . Auth::user()->id) }}">{{ Auth::user()->username }}</a></li>
+                        <li><a class="button" href="{{ url('/logout') }}"> Logout </a></li> 
                         </ul>
                     @endif
                 </nav>
