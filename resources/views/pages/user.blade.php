@@ -13,6 +13,11 @@
 @if (Auth::check() && $user->id === Auth::id())
 <div>
     <a class="button" href="{{ route('editProfileForm', ['id' => $user->id]) }}">Edit Profile</a>
+    <form method="POST" action="{{ route('deleteProfile', ['id' => $user->id]) }}">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="button">Delete Profile</button>
+    </form>
 </div>
 @endif
 

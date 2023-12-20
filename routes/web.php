@@ -150,6 +150,7 @@ Route::group(['middleware' => 'auth','prefix' => 'user'], function () {
     Route::get('/{id}',[UserController::class, 'show']);
     Route::get('/{id}/edit', [UserController::class, 'editProfileForm'])->name('editProfileForm');
     Route::put('/{id}/edit', [UserController::class, 'editProfile'])->name('editProfile');
+    Route::delete('/{id}', [UserController::class, 'deleteProfile'])->name('deleteProfile');
 });
 
 // Authentication

@@ -56,6 +56,16 @@ class UserController extends Controller
         return redirect('/user/'.$user->id);
     }
 
+    public function deleteProfile($id) {
+
+        $this->authorize('isAuthUser', User::class);
+        
+        $user = User::find($id);
+        $user->delete();
+
+        return redirect('/login')->with('message', 'Your account has been deleted!');
+    }
+
     public function showAppeal(){
         $this->authorize('showAppeal', User::class);
         return view('pages.appeal');

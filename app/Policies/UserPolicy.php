@@ -25,5 +25,10 @@ class UserPolicy
     {
         return !auth()->check();
     }
+
+    public function isAuthUser(User $user): bool
+    {
+        return auth()->user()->id === $user->id;
+    }
     
 }
