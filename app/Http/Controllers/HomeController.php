@@ -68,4 +68,9 @@ class HomeController extends Controller
     
         return view('pages.search', ['questions' => $questions]);
     }
+
+    public function showAbout()
+    {
+        return view('pages.aboutUs');
+    }
 }

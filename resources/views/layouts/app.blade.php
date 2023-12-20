@@ -24,6 +24,13 @@
         <main>
             <header>
                 <h1><a href="{{ url('/home') }}">BrainShare</a></h1>
+                <nav>
+                    <ul>
+                        <li><a href="{{ route('showAbout') }}">About us</a></li>
+                        <li><a href="{{ url('/faq') }}">FAQ</a></li>
+                        <li><a href="{{ url('/contact') }}">Contact</a></li>
+                    </ul>
+                </nav>
                 @if (Auth::check())
                     <div>
                     @if (Auth::user()->isAdmin())
@@ -37,6 +44,7 @@
                     </span>
                    </div>
                 @endif
+               
             </header>
             <section id="content">
                 @yield('content')

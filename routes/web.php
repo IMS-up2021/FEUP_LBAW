@@ -24,6 +24,8 @@ use App\Http\Controllers\Auth\RegisterController;
 // Home
 Route::redirect('/', '/login');
 
+// About
+Route::get('/about', [HomeController::class, 'showAbout'])->name('showAbout');
 
 Route::get('/home', [HomeController::class, 'show'])->name('home');
 Route::get('/home/search', [HomeController::class, 'search'])->name('search');
