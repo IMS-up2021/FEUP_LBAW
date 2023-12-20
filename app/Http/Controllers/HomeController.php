@@ -75,4 +75,13 @@ class HomeController extends Controller
     {
         return view('pages.aboutUs');
     }
+    public function showFAQ()
+    {
+        return view('pages.faq');
+    }
+    public function showContact()
+    {
+        return view('pages.contact');
+    }
+    
 }
