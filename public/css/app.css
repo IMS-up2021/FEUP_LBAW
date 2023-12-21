@@ -6,6 +6,7 @@ body {
     margin: 0;
     color: #23232e;
     font-family: 'Poppins', sans-serif;
+    line-height: 1.4;
   }
 header a {
   color: #ffffff;
@@ -27,13 +28,6 @@ header a {
     letter-spacing: 3px;
     font-size: 24px;
 
-  }
-
-  #aboutUs-h1{
-    font-size: 2em;
-    text-align: center;
-    margin: 0.5em;
-    padding: 0.5em;
   }
 
   .aboutUs {
@@ -160,16 +154,6 @@ header a {
     border-color: #23232e;
   }
   
-#faq-h1{
-  font-size: 2em;
-  text-align: center;
-  margin: 0.5em;
-  padding: 0.5em;
-}
-
-
-
-
 .question {
     margin-bottom: 20px;
     cursor: pointer;
@@ -201,13 +185,6 @@ header a {
     font-weight: normal;
 }
 
-#h1-contact{
-  font-size: 2em;
-  text-align: center;
-  margin: 0.5em;
-  padding: 0.5em;
-}
-
 .contact-info {
   text-align: center;
 }
@@ -219,7 +196,7 @@ header a {
   margin: 0 0; 
 }
 
-#h1-reset-password{
+h1{
   font-size: 2em;
   text-align: center;
   margin: 0.5em;

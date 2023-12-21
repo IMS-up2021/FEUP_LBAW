@@ -253,7 +253,7 @@ EXECUTE FUNCTION notifications_function();
 INSERT INTO users VALUES (
   1000,
   'John Doe',
-  'admin@gmail.com',
+  'user1@gmail.com',
   '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
   'Description'
 ); -- 
@@ -261,7 +261,7 @@ INSERT INTO users VALUES (
 INSERT INTO users VALUES (
   2000,
   'Sarah Doe',
-  'admin2@gmail.com',
+  'user2@gmail.com',
   '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
   'Description'
 ); -- 
@@ -269,10 +269,22 @@ INSERT INTO users VALUES (
 INSERT INTO users VALUES (
   3000,
   'Admin',
-  'real_admin@gmail.com',
+  'admin@gmail.com',
   '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
   'Description'
-); -- 
+); 
+
+INSERT INTO users VALUES (
+  4000,
+  'Moderator',
+  'moderator@gmail.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
+  'Description'
+);
+
+INSERT INTO moderator VALUES (
+  4000
+);
 
 INSERT INTO admin VALUES (
   3000
