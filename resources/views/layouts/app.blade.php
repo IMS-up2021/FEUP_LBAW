@@ -39,8 +39,8 @@
                     @endif
                         <li><a href="{{ url('/user/' . Auth::user()->id) }}">{{ Auth::user()->username }}</a></li>
                         <li><a class="button" href="{{ url('/logout') }}"> Logout </a></li> 
-                        </ul>
                     @endif
+                    </ul>
                 </nav>
             </header>
             <section id="content">
