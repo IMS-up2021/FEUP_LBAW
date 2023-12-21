@@ -11,6 +11,11 @@ class UserPolicy
         return $user->isAdmin() || $user->isModerator();
     }
 
+    public function showOnlyAdmin(User $user): bool
+    {
+        return $user->isAdmin();
+    }
+
     public function showAppeal(User $user): bool
     {
         return $user->blocked;

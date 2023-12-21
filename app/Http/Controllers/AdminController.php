@@ -20,7 +20,7 @@ class AdminController extends Controller
 
     public function showCreateTag()
     {
-        $this->authorize('showAdministration', User::class);
+        $this->authorize('showOnlyAdmin', User::class);
 
         $tags = Tag::all();
         return view('pages.createTag', ['tags' => $tags]);
@@ -42,7 +42,7 @@ class AdminController extends Controller
 
     public function showDeleteTag()
     {
-        $this->authorize('showAdministration', User::class);
+        $this->authorize('showOnlyAdmin', User::class);
 
         $tags = Tag::all();
         return view('pages.deleteTag', ['tags' => $tags]);
@@ -71,7 +71,7 @@ class AdminController extends Controller
     }
     public function createTag(Request $request)
     {
-        $this->authorize('showAdministration', User::class);
+        $this->authorize('showOnlyAdmin', User::class);
 
         $request->validate([
             'tag_name' => 'required|max:255',
@@ -92,7 +92,7 @@ class AdminController extends Controller
     public function deleteTag(Request $request)
     {
 
-        $this->authorize('showAdministration', User::class);
+        $this->authorize('showOnlyAdmin', User::class);
 
         $request->validate([
             'id' => 'required',
@@ -112,13 +112,13 @@ class AdminController extends Controller
 
     public function showCreateUser()
     {
-        $this->authorize('showAdministration', User::class);
+        $this->authorize('showOnlyAdmin', User::class);
 
         return view('pages.createUser');
     }
     public function createUser(Request $request)
     {
-        $this->authorize('showAdministration', User::class);
+        $this->authorize('showOnlyAdmin', User::class);
 
         $validatedData = $request->validate([
             'username' => 'required|max:255',
@@ -154,14 +154,14 @@ class AdminController extends Controller
 
     public function showEditUser()
     {
-        $this->authorize('showAdministration', User::class);
+        $this->authorize('showOnlyAdmin', User::class);
 
         $users = User::all();
         return view('pages.editUser', ['users' => $users]);
     }
     public function showEditUserForm($id)
     {
-        $this->authorize('showAdministration', User::class);
+        $this->authorize('showOnlyAdmin', User::class);
 
         $user = User::find($id);
         return view('pages.editUserForm', ['user' => $user]);
@@ -169,7 +169,7 @@ class AdminController extends Controller
 
     public function editUser(Request $request, $id)
     {
-        $this->authorize('showAdministration', User::class);
+        $this->authorize('showOnlyAdmin', User::class);
 
         $validatedData = $request->validate([
             'username' => 'required|max:255',
@@ -218,7 +218,7 @@ class AdminController extends Controller
 
     public function showDeleteUser()
     {
-        $this->authorize('showAdministration', User::class);
+        $this->authorize('showOnlyAdmin', User::class);
 
         $users = User::all();
         return view('pages.deleteUser', ['users' => $users]);
@@ -226,7 +226,7 @@ class AdminController extends Controller
 
     public function deleteUser(Request $request)
     {
-        $this->authorize('showAdministration', User::class);
+        $this->authorize('showOnlyAdmin', User::class);
 
         $request->validate([
             'id' => 'required',
