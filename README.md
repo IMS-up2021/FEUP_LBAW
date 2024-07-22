@@ -4,10 +4,10 @@ BrainShare seeks to use the internet’s power to connect people towards develop
 
 ## Project Components
 
-* [ER: Requirements Specification](https://git.fe.up.pt/lbaw/lbaw2324/lbaw23101/-/wikis/er)
-* [EBD: Database Specification](https://git.fe.up.pt/lbaw/lbaw2324/lbaw23101/-/wikis/ebd)
-* [EAP: Architecture Specification and Prototype](https://git.fe.up.pt/lbaw/lbaw2324/lbaw23101/-/wikis/eap)
-* [PA: Product and Presentation](https://git.fe.up.pt/lbaw/lbaw2324/lbaw23101/-/wikis/pa)
+* [ER: Requirements Specification](https://github.com/IMS-up2021/FEUP_LBAW/blob/main/docs/er%20%C2%B7%20Wiki%20%C2%B7%20LBAW%20_%20lbaw2324%20_%20lbaw23136.pdf)
+* [EBD: Database Specification](https://github.com/IMS-up2021/FEUP_LBAW/blob/main/docs/ebd%20%C2%B7%20Wiki%20%C2%B7%20LBAW%20_%20lbaw2324%20_%20lbaw23136.pdf)
+* [EAP: Architecture Specification and Prototype](https://github.com/IMS-up2021/FEUP_LBAW/blob/main/docs/eap%20%C2%B7%20Wiki%20%C2%B7%20LBAW%20_%20lbaw2324%20_%20lbaw23136.pdf)
+* [PA: Product and Presentation](https://github.com/IMS-up2021/FEUP_LBAW/blob/main/docs/pa%20%C2%B7%20Wiki%20%C2%B7%20LBAW%20_%20lbaw2324%20_%20lbaw23136.pdf)
 
 ## Artefacts Checklist
 
